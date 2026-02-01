@@ -399,6 +399,11 @@ Context: Repository had no agent configuration. Codebase was scaffolded via Lova
 State: 3 test files covering Timer, useKeyboardControls, and timerUtils. No CI. No pre-commit hooks. TypeScript strict mode off.
 Lesson: When onboarding to a generated codebase, audit the config before assuming standard tooling exists. This repo has no CI, no git hooks, and relaxed TypeScript settings.
 
+### 2026-02-01 - Reset Counts button infinite loop
+Root cause: `BuyInsPanel` used `while (buyIns > 0) removeBuyIn()` where `buyIns` was a stale closure value. `removeBuyIn()` enqueues async state updates that never change the closed-over variable, so the loop spins forever.
+Fix: Added atomic `resetCounts()` action to `TournamentProvider` that sets both counts to 0 in a single `setTournament` call. Replaced the while-loop in `BuyInsPanel` with a call to `resetCounts()`.
+Lesson: Never loop over React state in a synchronous handler. State updates are batched and asynchronous — the loop variable never changes. Always use a single atomic state update for "reset to X" operations.
+
 ## How to interact with humans
 
 Assume:

@@ -7,10 +7,11 @@ import { playButtonClickSound } from '@/lib/audio';
 const BuyInsPanel = () => {
   const { 
     tournament, 
-    addBuyIn, 
-    removeBuyIn, 
-    addReBuy, 
-    removeReBuy 
+    addBuyIn,
+    removeBuyIn,
+    addReBuy,
+    removeReBuy,
+    resetCounts
   } = useTournament();
   
   const { buyIns, reBuys } = tournament;
@@ -118,9 +119,7 @@ const BuyInsPanel = () => {
           size="sm" 
           className="text-muted-foreground"
           onClick={() => {
-            // Set both buy-ins and rebuys to 0
-            while (buyIns > 0) removeBuyIn();
-            while (reBuys > 0) removeReBuy();
+            resetCounts();
             playButtonClickSound();
           }}
         >

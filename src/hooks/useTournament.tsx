@@ -50,6 +50,7 @@ export interface TournamentContextValue {
   removeBuyIn: () => void;
   addReBuy: () => void;
   removeReBuy: () => void;
+  resetCounts: () => void;
   advanceToNextLevel: () => void;
   resetTournament: (clearStorage?: boolean) => void;
   toggleSettingsPanel: () => void;
@@ -310,6 +311,11 @@ export const TournamentProvider = ({ children }: { children: ReactNode }) => {
     }));
   }, []);
   
+  // Reset buy-in and re-buy counts to zero
+  const resetCounts = useCallback(() => {
+    setTournament((prev) => ({ ...prev, buyIns: 0, reBuys: 0 }));
+  }, []);
+
   // Advance to the next blind level
   const advanceToNextLevel = useCallback(() => {
     console.log("Advancing to next level");
@@ -430,6 +436,7 @@ export const TournamentProvider = ({ children }: { children: ReactNode }) => {
     removeBuyIn,
     addReBuy,
     removeReBuy,
+    resetCounts,
     advanceToNextLevel,
     resetTournament,
     toggleSettingsPanel,

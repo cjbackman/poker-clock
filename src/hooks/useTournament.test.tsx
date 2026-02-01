@@ -213,6 +213,35 @@ describe('useTournament', () => {
     });
   });
 
+  describe('reset counts', () => {
+    it('resetCounts sets both buyIns and reBuys to 0', () => {
+      const { result } = renderHook(() => useTournament(), { wrapper });
+
+      act(() => result.current.addBuyIn());
+      act(() => result.current.addBuyIn());
+      act(() => result.current.addBuyIn());
+      act(() => result.current.addReBuy());
+      act(() => result.current.addReBuy());
+
+      expect(result.current.tournament.buyIns).toBe(3);
+      expect(result.current.tournament.reBuys).toBe(2);
+
+      act(() => result.current.resetCounts());
+
+      expect(result.current.tournament.buyIns).toBe(0);
+      expect(result.current.tournament.reBuys).toBe(0);
+    });
+
+    it('resetCounts is a no-op when counts are already 0', () => {
+      const { result } = renderHook(() => useTournament(), { wrapper });
+
+      act(() => result.current.resetCounts());
+
+      expect(result.current.tournament.buyIns).toBe(0);
+      expect(result.current.tournament.reBuys).toBe(0);
+    });
+  });
+
   describe('settings updates', () => {
     it('updateSettings merges partial settings', () => {
       const { result } = renderHook(() => useTournament(), { wrapper });
