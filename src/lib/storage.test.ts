@@ -9,9 +9,7 @@ const makeTournamentState = (overrides?: Partial<TournamentState>): TournamentSt
     reBuyAmount: 400,
     blindStructure: {
       name: 'Test',
-      levels: [
-        { id: 1, smallBlind: 10, bigBlind: 20, ante: 0, duration: 1200 },
-      ],
+      levels: [{ id: 1, smallBlind: 10, bigBlind: 20, ante: 0, duration: 1200 }],
     },
     prizeDistribution: { type: 'percentage', first: 50, second: 35, third: 15 },
   },

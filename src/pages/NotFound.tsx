@@ -1,17 +1,13 @@
-
-import { useLocation } from "react-router-dom";
-import { useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import { ArrowLeft } from "lucide-react";
+import { useLocation } from 'react-router-dom';
+import { useEffect } from 'react';
+import { Button } from '@/components/ui/button';
+import { ArrowLeft } from 'lucide-react';
 
 const NotFound = () => {
   const location = useLocation();
 
   useEffect(() => {
-    console.error(
-      "404 Error: User attempted to access non-existent route:",
-      location.pathname
-    );
+    console.error('404 Error: User attempted to access non-existent route:', location.pathname);
   }, [location.pathname]);
 
   return (
@@ -20,11 +16,7 @@ const NotFound = () => {
         <h1 className="text-6xl font-bold mb-2">404</h1>
         <p className="text-xl text-muted-foreground mb-6">Oops! Page not found</p>
         <div className="flex justify-center">
-          <Button 
-            size="lg"
-            className="gap-2"
-            onClick={() => window.location.href = '/'}
-          >
+          <Button size="lg" className="gap-2" onClick={() => (window.location.href = '/')}>
             <ArrowLeft className="h-5 w-5" />
             Return to Poker Clock
           </Button>

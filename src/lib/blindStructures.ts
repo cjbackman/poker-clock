@@ -1,4 +1,3 @@
-
 export type BlindLevel = {
   id: number;
   smallBlind: number;
@@ -15,7 +14,7 @@ export type BlindStructure = {
 // Predefined blind structures
 export const blindStructures: { [key: string]: BlindStructure } = {
   regular: {
-    name: "Juldagspokern",
+    name: 'Juldagspokern',
     levels: [
       { id: 1, smallBlind: 10, bigBlind: 25, ante: 0, duration: 1200 },
       { id: 2, smallBlind: 25, bigBlind: 50, ante: 0, duration: 1200 },
@@ -44,11 +43,9 @@ export const blindStructures: { [key: string]: BlindStructure } = {
 // Helper function to get the next blind level
 export const getNextLevel = (
   structure: BlindStructure,
-  currentLevelId: number
+  currentLevelId: number,
 ): BlindLevel | null => {
-  const currentIndex = structure.levels.findIndex(
-    (level) => level.id === currentLevelId
-  );
+  const currentIndex = structure.levels.findIndex((level) => level.id === currentLevelId);
   if (currentIndex === -1 || currentIndex === structure.levels.length - 1) {
     return null;
   }

@@ -36,13 +36,13 @@ export interface TournamentContextValue {
   // State
   tournament: TournamentState;
   timer: ReturnType<typeof useTimer>;
-  
+
   // Current info
   currentLevel: BlindLevel;
   nextLevel: BlindLevel | null;
   prizePool: number;
   prizes: { first: number; second: number; third: number };
-  
+
   // Actions
   updateSettings: (settings: Partial<TournamentSettings>) => void;
   updateBlindStructure: (structureKey: string) => void;
@@ -55,10 +55,10 @@ export interface TournamentContextValue {
   resetTournament: (clearStorage?: boolean) => void;
   toggleSettingsPanel: () => void;
   dismissAlert: () => void;
-  
+
   // Prize distribution
   updatePrizeDistribution: (distribution: Partial<PrizeDistribution>) => void;
-  
+
   // Custom blind structure management
   updateCustomBlindStructure: (levels: BlindLevel[]) => void;
   addBlindLevel: (level: BlindLevel) => void;
@@ -95,7 +95,7 @@ export const useTournament = (): TournamentContextValue => {
 // Provider component
 export const TournamentProvider = ({ children }: { children: ReactNode }) => {
   const { toast } = useToast();
-  
+
   // Initialize tournament state, checking local storage first
   const [tournament, setTournament] = useState<TournamentState>(() => {
     const savedState = loadTournamentState();
@@ -111,15 +111,16 @@ export const TournamentProvider = ({ children }: { children: ReactNode }) => {
       isPanelOpen: false,
     };
   });
-  
+
   // Get the current blind level
-  const currentLevel = tournament.settings.blindStructure.levels.find(
-    (level) => level.id === tournament.currentLevelId
-  ) || tournament.settings.blindStructure.levels[0];
-  
+  const currentLevel =
+    tournament.settings.blindStructure.levels.find(
+      (level) => level.id === tournament.currentLevelId,
+    ) || tournament.settings.blindStructure.levels[0];
+
   // Get the next blind level (if any)
   const nextLevel = getNextLevel(tournament.settings.blindStructure, tournament.currentLevelId);
-  
+
   // Timer setup with callbacks
   const timer = useTimer({
     initialTime: currentLevel.duration,
@@ -127,36 +128,37 @@ export const TournamentProvider = ({ children }: { children: ReactNode }) => {
       // When the timer completes, show the blind change alert and play a sound
       setTournament((prev) => ({ ...prev, isBlindChangeAlert: true }));
       playBlindChangeSound();
-      
+
       // Show a toast notification
       toast({
         title: 'Blind Level Complete',
-        description: nextLevel 
+        description: nextLevel
           ? `New blinds: ${nextLevel.smallBlind}/${nextLevel.bigBlind}`
           : 'This is the final level',
         variant: 'default',
       });
-      
+
       // Auto-advance to the next level
       if (nextLevel) {
         advanceToNextLevel();
       }
     },
   });
-  
+
   // Save tournament state to local storage whenever it changes
   useEffect(() => {
     saveTournamentState(tournament);
   }, [tournament]);
-  
+
   // Calculate prize pool
-  const prizePool = tournament.buyIns * tournament.settings.buyInAmount + 
-                    tournament.reBuys * tournament.settings.reBuyAmount;
-  
+  const prizePool =
+    tournament.buyIns * tournament.settings.buyInAmount +
+    tournament.reBuys * tournament.settings.reBuyAmount;
+
   // Calculate prizes based on distribution type
   const calculatePrizes = useCallback(() => {
     const { type, first, second, third } = tournament.settings.prizeDistribution;
-    
+
     if (type === 'percentage') {
       return {
         first: (prizePool * first) / 100,
@@ -167,34 +169,37 @@ export const TournamentProvider = ({ children }: { children: ReactNode }) => {
       return { first, second, third };
     }
   }, [prizePool, tournament.settings.prizeDistribution]);
-  
+
   const prizes = calculatePrizes();
-  
+
   // Update tournament settings
   const updateSettings = useCallback((settings: Partial<TournamentSettings>) => {
-    setTournament((prev) => ({ 
-      ...prev, 
-      settings: { ...prev.settings, ...settings } 
+    setTournament((prev) => ({
+      ...prev,
+      settings: { ...prev.settings, ...settings },
     }));
   }, []);
-  
+
   // Update the blind structure
-  const updateBlindStructure = useCallback((structureKey: string) => {
-    if (blindStructures[structureKey]) {
-      setTournament((prev) => ({
-        ...prev,
-        settings: {
-          ...prev.settings,
-          blindStructure: blindStructures[structureKey],
-        },
-        currentLevelId: 1,
-      }));
-      
-      // Reset the timer to the new first level's duration
-      timer.reset(blindStructures[structureKey].levels[0].duration);
-    }
-  }, [timer]);
-  
+  const updateBlindStructure = useCallback(
+    (structureKey: string) => {
+      if (blindStructures[structureKey]) {
+        setTournament((prev) => ({
+          ...prev,
+          settings: {
+            ...prev.settings,
+            blindStructure: blindStructures[structureKey],
+          },
+          currentLevelId: 1,
+        }));
+
+        // Reset the timer to the new first level's duration
+        timer.reset(blindStructures[structureKey].levels[0].duration);
+      }
+    },
+    [timer],
+  );
+
   // Custom blind structure management
   const updateCustomBlindStructure = useCallback((levels: BlindLevel[]) => {
     setTournament((prev) => ({
@@ -208,14 +213,14 @@ export const TournamentProvider = ({ children }: { children: ReactNode }) => {
       },
     }));
   }, []);
-  
+
   // Add a new blind level
   const addBlindLevel = useCallback((level: BlindLevel) => {
     setTournament((prev) => {
       const updatedLevels = [...prev.settings.blindStructure.levels, level];
       // Sort levels by ID to ensure they appear in order
       updatedLevels.sort((a, b) => a.id - b.id);
-      
+
       return {
         ...prev,
         settings: {
@@ -228,22 +233,19 @@ export const TournamentProvider = ({ children }: { children: ReactNode }) => {
       };
     });
   }, []);
-  
+
   // Remove a blind level
   const removeBlindLevel = useCallback((levelId: number) => {
     setTournament((prev) => {
       // Don't remove if it's the only level or if it's the current level
-      if (
-        prev.settings.blindStructure.levels.length <= 1 ||
-        levelId === prev.currentLevelId
-      ) {
+      if (prev.settings.blindStructure.levels.length <= 1 || levelId === prev.currentLevelId) {
         return prev;
       }
-      
+
       const updatedLevels = prev.settings.blindStructure.levels.filter(
-        (level) => level.id !== levelId
+        (level) => level.id !== levelId,
       );
-      
+
       return {
         ...prev,
         settings: {
@@ -256,61 +258,64 @@ export const TournamentProvider = ({ children }: { children: ReactNode }) => {
       };
     });
   }, []);
-  
+
   // Update a specific blind level field
-  const updateBlindLevel = useCallback((levelId: number, field: keyof BlindLevel, value: number) => {
-    setTournament((prev) => {
-      const updatedLevels = prev.settings.blindStructure.levels.map((level) => {
-        if (level.id === levelId) {
-          return {
-            ...level,
-            [field]: value,
-          };
-        }
-        return level;
-      });
-      
-      return {
-        ...prev,
-        settings: {
-          ...prev.settings,
-          blindStructure: {
-            ...prev.settings.blindStructure,
-            levels: updatedLevels,
+  const updateBlindLevel = useCallback(
+    (levelId: number, field: keyof BlindLevel, value: number) => {
+      setTournament((prev) => {
+        const updatedLevels = prev.settings.blindStructure.levels.map((level) => {
+          if (level.id === levelId) {
+            return {
+              ...level,
+              [field]: value,
+            };
+          }
+          return level;
+        });
+
+        return {
+          ...prev,
+          settings: {
+            ...prev.settings,
+            blindStructure: {
+              ...prev.settings.blindStructure,
+              levels: updatedLevels,
+            },
           },
-        },
-      };
-    });
-  }, []);
-  
+        };
+      });
+    },
+    [],
+  );
+
   // Add a buy-in
   const addBuyIn = useCallback(() => {
     setTournament((prev) => ({ ...prev, buyIns: prev.buyIns + 1 }));
     playSuccessSound();
   }, []);
-  
+
   // Remove a buy-in
   const removeBuyIn = useCallback(() => {
-    setTournament((prev) => ({ 
-      ...prev, 
-      buyIns: Math.max(0, prev.buyIns - 1) 
+    setTournament((prev) => ({
+      ...prev,
+      buyIns: Math.max(0, prev.buyIns - 1),
     }));
   }, []);
-  
+
   // Add a re-buy
   const addReBuy = useCallback(() => {
     setTournament((prev) => ({ ...prev, reBuys: prev.reBuys + 1 }));
     playSuccessSound();
   }, []);
-  
+
   // Remove a re-buy
   const removeReBuy = useCallback(() => {
-    setTournament((prev) => ({ 
-      ...prev, 
-      reBuys: Math.max(0, prev.reBuys - 1) 
+    setTournament((prev) => ({
+      ...prev,
+      reBuys: Math.max(0, prev.reBuys - 1),
     }));
   }, []);
-  
+
   // Reset buy-in and re-buy counts to zero
   const resetCounts = useCallback(() => {
     setTournament((prev) => ({ ...prev, buyIns: 0, reBuys: 0 }));
@@ -318,28 +323,28 @@ export const TournamentProvider = ({ children }: { children: ReactNode }) => {
 
   // Advance to the next blind level
   const advanceToNextLevel = useCallback(() => {
-    console.log("Advancing to next level");
+    console.log('Advancing to next level');
     if (nextLevel) {
       setTournament((prev) => ({
         ...prev,
         currentLevelId: nextLevel.id,
         isBlindChangeAlert: false,
       }));
-      
+
       // Reset the timer to the new level's duration
-      console.log("Resetting timer with duration:", nextLevel.duration);
+      console.log('Resetting timer with duration:', nextLevel.duration);
       timer.reset(nextLevel.duration);
-      
+
       // Important: We need to ensure the timer starts AFTER the reset is processed
       // Using setTimeout with 0 delay to ensure this runs after the current execution context
       setTimeout(() => {
-        console.log("Starting timer after level change");
+        console.log('Starting timer after level change');
         timer.start();
       }, 0);
-      
+
       // Play a notification sound
       playNotificationSound();
-      
+
       // Show a toast notification
       toast({
         title: 'New Blind Level',
@@ -348,61 +353,64 @@ export const TournamentProvider = ({ children }: { children: ReactNode }) => {
       });
     }
   }, [nextLevel, timer, toast]);
-  
+
   // Reset the tournament
-  const resetTournament = useCallback((clearStorage = false) => {
-    if (clearStorage) {
-      // Clear local storage and reset to defaults
-      clearTournamentState();
-      
-      setTournament({
-        settings: defaultSettings,
-        buyIns: 0,
-        reBuys: 0,
-        currentLevelId: 1,
-        isBlindChangeAlert: false,
-        isPanelOpen: false,
-      });
-      
-      // Reset the timer to the first level's duration
-      timer.reset(defaultSettings.blindStructure.levels[0].duration);
-      
-      // Show a toast notification
-      toast({
-        title: 'Tournament Completely Reset',
-        description: 'All settings have been restored to defaults',
-        variant: 'default',
-      });
-    } else {
-      // Just reset the current level without clearing storage
-      setTournament((prev) => ({
-        ...prev,
-        currentLevelId: 1,
-        isBlindChangeAlert: false,
-      }));
-      
-      // Reset the timer to the first level's duration
-      timer.reset(tournament.settings.blindStructure.levels[0].duration);
-      
-      // Show a toast notification
-      toast({
-        title: 'Tournament Reset',
-        description: 'Tournament has been reset to the first level',
-        variant: 'default',
-      });
-    }
-  }, [timer, toast, tournament.settings.blindStructure.levels]);
-  
+  const resetTournament = useCallback(
+    (clearStorage = false) => {
+      if (clearStorage) {
+        // Clear local storage and reset to defaults
+        clearTournamentState();
+
+        setTournament({
+          settings: defaultSettings,
+          buyIns: 0,
+          reBuys: 0,
+          currentLevelId: 1,
+          isBlindChangeAlert: false,
+          isPanelOpen: false,
+        });
+
+        // Reset the timer to the first level's duration
+        timer.reset(defaultSettings.blindStructure.levels[0].duration);
+
+        // Show a toast notification
+        toast({
+          title: 'Tournament Completely Reset',
+          description: 'All settings have been restored to defaults',
+          variant: 'default',
+        });
+      } else {
+        // Just reset the current level without clearing storage
+        setTournament((prev) => ({
+          ...prev,
+          currentLevelId: 1,
+          isBlindChangeAlert: false,
+        }));
+
+        // Reset the timer to the first level's duration
+        timer.reset(tournament.settings.blindStructure.levels[0].duration);
+
+        // Show a toast notification
+        toast({
+          title: 'Tournament Reset',
+          description: 'Tournament has been reset to the first level',
+          variant: 'default',
+        });
+      }
+    },
+    [timer, toast, tournament.settings.blindStructure.levels],
+  );
+
   // Toggle the settings panel
   const toggleSettingsPanel = useCallback(() => {
     setTournament((prev) => ({ ...prev, isPanelOpen: !prev.isPanelOpen }));
   }, []);
-  
+
   // Dismiss the blind change alert
   const dismissAlert = useCallback(() => {
     setTournament((prev) => ({ ...prev, isBlindChangeAlert: false }));
   }, []);
-  
+
   // Update prize distribution
   const updatePrizeDistribution = useCallback((distribution: Partial<PrizeDistribution>) => {
     setTournament((prev) => ({
@@ -416,12 +424,12 @@ export const TournamentProvider = ({ children }: { children: ReactNode }) => {
       },
     }));
   }, []);
-  
+
   // Reset timer when current level changes
   useEffect(() => {
     timer.reset(currentLevel.duration);
   }, [currentLevel.duration]);
-  
+
   // Create the context value
   const contextValue: TournamentContextValue = {
     tournament,
@@ -447,10 +455,6 @@ export const TournamentProvider = ({ children }: { children: ReactNode }) => {
     removeBlindLevel,
     updateBlindLevel,
   };
-  
-  return (
-    <TournamentContext.Provider value={contextValue}>
-      {children}
-    </TournamentContext.Provider>
-  );
+
+  return <TournamentContext.Provider value={contextValue}>{children}</TournamentContext.Provider>;
 };

@@ -1,4 +1,3 @@
-
 /**
  * Check if the timer should show a blind change alert
  * @param timeRemaining Time remaining in seconds

@@ -85,9 +85,7 @@ describe('useTournament', () => {
     it('currentLevel matches currentLevelId', () => {
       const { result } = renderHook(() => useTournament(), { wrapper });
 
-      expect(result.current.currentLevel.id).toBe(
-        result.current.tournament.currentLevelId,
-      );
+      expect(result.current.currentLevel.id).toBe(result.current.tournament.currentLevelId);
     });
 
     it('nextLevel is the level after current', () => {
@@ -325,9 +323,7 @@ describe('useTournament', () => {
       // Remove level 5 (not current, which is 1)
       act(() => result.current.removeBlindLevel(5));
 
-      expect(result.current.tournament.settings.blindStructure.levels).toHaveLength(
-        levelCount - 1,
-      );
+      expect(result.current.tournament.settings.blindStructure.levels).toHaveLength(levelCount - 1);
       expect(
         result.current.tournament.settings.blindStructure.levels.find((l) => l.id === 5),
       ).toBeUndefined();
@@ -340,9 +336,7 @@ describe('useTournament', () => {
 
       act(() => result.current.removeBlindLevel(1)); // current level
 
-      expect(result.current.tournament.settings.blindStructure.levels).toHaveLength(
-        levelCount,
-      );
+      expect(result.current.tournament.settings.blindStructure.levels).toHaveLength(levelCount);
     });
 
     it('removeBlindLevel refuses to remove the last remaining level', () => {
@@ -431,9 +425,7 @@ describe('useTournament', () => {
           reBuyAmount: 100,
           blindStructure: {
             name: 'Single',
-            levels: [
-              { id: 1, smallBlind: 5, bigBlind: 10, ante: 0, duration: 2 },
-            ],
+            levels: [{ id: 1, smallBlind: 5, bigBlind: 10, ante: 0, duration: 2 }],
           },
           prizeDistribution: { type: 'percentage', first: 50, second: 35, third: 15 },
         },

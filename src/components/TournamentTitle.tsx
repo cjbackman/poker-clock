@@ -1,4 +1,3 @@
-
 import { useState, useRef, useEffect } from 'react';
 import { useTournament } from '@/hooks/useTournament';
 import { Edit, Check } from 'lucide-react';
@@ -9,7 +8,7 @@ const TournamentTitle = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [titleValue, setTitleValue] = useState(tournament.settings.title);
   const inputRef = useRef<HTMLInputElement>(null);
-  
+
   // Focus the input when switching to edit mode
   useEffect(() => {
     if (isEditing && inputRef.current) {
@@ -18,7 +17,7 @@ const TournamentTitle = () => {
       inputRef.current.select();
     }
   }, [isEditing]);
-  
+
   // Handle save title
   const saveTitle = () => {
     if (titleValue.trim()) {
@@ -30,7 +29,7 @@ const TournamentTitle = () => {
     setIsEditing(false);
     playButtonClickSound();
   };
-  
+
   // Handle key press
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
@@ -40,7 +39,7 @@ const TournamentTitle = () => {
       setIsEditing(false);
     }
   };
-  
+
   return (
     <div className="flex items-center justify-center">
       {isEditing ? (
@@ -65,7 +64,7 @@ const TournamentTitle = () => {
           </button>
         </div>
       ) : (
-        <h1 
+        <h1
           className="text-2xl sm:text-3xl md:text-4xl font-semibold py-2 flex items-center gap-2 cursor-pointer group"
           onClick={() => {
             setIsEditing(true);

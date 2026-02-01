@@ -132,15 +132,17 @@ PrizeDistribution  { type: 'percentage' | 'fixed', first, second, third }
 | Test (watch) | `npm run test` |
 | Test (coverage) | `npm run test:coverage` |
 | Lint | `npm run lint` |
+| Format | `npm run format` (Prettier, write) |
+| Format check | `npm run format:check` (Prettier, verify only) |
 | Deploy | `npm run deploy` (builds then pushes to gh-pages branch) |
 
 **After every change, run:**
 
 ```bash
-npx vitest run && npm run lint
+npx vitest run && npm run lint && npm run format:check
 ```
 
-There are **no pre-commit hooks or CI pipelines** configured yet. You are the last line of defense.
+**Pre-commit hook** (Husky) runs automatically on `git commit`: tests, lint, and format check. If any step fails, the commit is rejected.
 
 ## Practices you use
 
@@ -268,7 +270,7 @@ If prompts grow beyond 30-40 lines:
 
 #### Tooling
 
-- Pre-commit: not yet configured - **run tests and lint manually before every commit**
+- Pre-commit hook (Husky): tests, lint, format check — runs automatically on `git commit`
 - CI must be green before merging (when CI exists)
 
 ### 4. Bug fixing protocol

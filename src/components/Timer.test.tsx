@@ -1,4 +1,3 @@
-
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { TournamentProvider, useTournament } from '@/hooks/useTournament';
@@ -35,7 +34,9 @@ vi.mock('@/hooks/useTournament', () => {
       resume: vi.fn(),
       reset: vi.fn(),
       addTime: vi.fn(),
-      formatTime: vi.fn((seconds) => `${Math.floor(seconds / 60)}:${(seconds % 60).toString().padStart(2, '0')}`),
+      formatTime: vi.fn(
+        (seconds) => `${Math.floor(seconds / 60)}:${(seconds % 60).toString().padStart(2, '0')}`,
+      ),
     },
     tournament: {
       settings: {
@@ -97,7 +98,7 @@ vi.mock('@/hooks/useTournament', () => {
 
   return {
     TournamentProvider: ({ children }) => children,
-    useTournament: mockUseTournament
+    useTournament: mockUseTournament,
   };
 });
 
@@ -110,7 +111,7 @@ describe('Timer', () => {
     render(
       <TournamentProvider>
         <Timer />
-      </TournamentProvider>
+      </TournamentProvider>,
     );
 
     // Select the main timer container
@@ -137,9 +138,9 @@ describe('Timer', () => {
     render(
       <TournamentProvider>
         <Timer />
-      </TournamentProvider>
+      </TournamentProvider>,
     );
-    
+
     // Play button should be visible
     const playButton = screen.getByRole('button', { name: /play/i });
     expect(playButton).toBeInTheDocument();
@@ -149,13 +150,13 @@ describe('Timer', () => {
     render(
       <TournamentProvider>
         <Timer />
-      </TournamentProvider>
+      </TournamentProvider>,
     );
-    
+
     // Get and click the play button
     const playButton = screen.getByRole('button', { name: /play/i });
     fireEvent.click(playButton);
-    
+
     // Check if sound function was called
     expect(audioModule.playButtonClickSound).toHaveBeenCalledTimes(1);
   });
@@ -164,12 +165,12 @@ describe('Timer', () => {
     render(
       <TournamentProvider>
         <Timer />
-      </TournamentProvider>
+      </TournamentProvider>,
     );
-    
+
     // Simulate spacebar keydown
     fireEvent.keyDown(window, { code: 'Space' });
-    
+
     // Check if sound function was called
     expect(audioModule.playButtonClickSound).toHaveBeenCalledTimes(1);
   });
@@ -185,9 +186,9 @@ describe('Timer', () => {
       timerResetMock(900);
       setTimeout(() => {
         timerStartMock();
-      }, 0);  // Simulating immediate start after reset
+      }, 0); // Simulating immediate start after reset
     });
-    
+
     vi.mocked(useTournament).mockImplementationOnce(() => ({
       timer: {
         timeRemaining: 900,
@@ -199,7 +200,9 @@ describe('Timer', () => {
         resume: vi.fn(),
         reset: timerResetMock,
         addTime: vi.fn(),
-        formatTime: vi.fn((seconds) => `${Math.floor(seconds / 60)}:${(seconds % 60).toString().padStart(2, '0')}`),
+        formatTime: vi.fn(
+          (seconds) => `${Math.floor(seconds / 60)}:${(seconds % 60).toString().padStart(2, '0')}`,
+        ),
       },
       tournament: {
         settings: {
@@ -262,7 +265,7 @@ describe('Timer', () => {
     render(
       <TournamentProvider>
         <Timer />
-      </TournamentProvider>
+      </TournamentProvider>,
     );
 
     // Trigger advancing to next level
@@ -283,4 +286,3 @@ describe('Timer', () => {
     vi.useRealTimers();
   });
 });
-

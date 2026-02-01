@@ -1,4 +1,3 @@
-
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
 @tailwind base;
@@ -157,15 +156,15 @@
   .prize-badge {
     @apply px-3 py-1 rounded-full text-sm font-medium inline-flex items-center justify-center;
   }
-  
+
   .prize-badge-1st {
     @apply bg-poker-gold/10 text-poker-gold border border-poker-gold/20;
   }
-  
+
   .prize-badge-2nd {
     @apply bg-poker-silver/10 text-poker-silver border border-poker-silver/20;
   }
-  
+
   .prize-badge-3rd {
     @apply bg-poker-bronze/10 text-poker-bronze border border-poker-bronze/20;
   }
@@ -180,7 +179,7 @@
 }
 .loader::after,
 .loader::before {
-  content: '';  
+  content: '';
   box-sizing: border-box;
   width: 48px;
   height: 48px;

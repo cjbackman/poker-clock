@@ -33,9 +33,7 @@ describe('useTimer', () => {
     });
 
     it('auto-starts when autoStart is true', () => {
-      const { result } = renderHook(() =>
-        useTimer({ initialTime: 300, autoStart: true }),
-      );
+      const { result } = renderHook(() => useTimer({ initialTime: 300, autoStart: true }));
       expect(result.current.isRunning).toBe(true);
       expect(result.current.isPaused).toBe(false);
     });
@@ -102,9 +100,7 @@ describe('useTimer', () => {
 
     it('calls onTick on each tick', () => {
       const onTick = vi.fn();
-      const { result } = renderHook(() =>
-        useTimer({ initialTime: 5, onTick }),
-      );
+      const { result } = renderHook(() => useTimer({ initialTime: 5, onTick }));
 
       act(() => result.current.start());
       act(() => vi.advanceTimersByTime(1000));
@@ -116,9 +112,7 @@ describe('useTimer', () => {
   describe('completion', () => {
     it('marks isComplete when timer reaches 0', () => {
       const onComplete = vi.fn();
-      const { result } = renderHook(() =>
-        useTimer({ initialTime: 2, onComplete }),
-      );
+      const { result } = renderHook(() => useTimer({ initialTime: 2, onComplete }));
 
       act(() => result.current.start());
       act(() => vi.advanceTimersByTime(3000));
@@ -170,9 +164,7 @@ describe('useTimer', () => {
 
     it('calls onTimeChange callback when resetting', () => {
       const onTimeChange = vi.fn();
-      const { result } = renderHook(() =>
-        useTimer({ initialTime: 300, onTimeChange }),
-      );
+      const { result } = renderHook(() => useTimer({ initialTime: 300, onTimeChange }));
 
       onTimeChange.mockClear();
 
@@ -204,9 +196,7 @@ describe('useTimer', () => {
 
     it('calls onTimeChange callback', () => {
       const onTimeChange = vi.fn();
-      const { result } = renderHook(() =>
-        useTimer({ initialTime: 100, onTimeChange }),
-      );
+      const { result } = renderHook(() => useTimer({ initialTime: 100, onTimeChange }));
 
       // Clear calls from initial render
       onTimeChange.mockClear();
@@ -232,10 +222,9 @@ describe('useTimer', () => {
 
   describe('initialTime changes', () => {
     it('updates timeRemaining when initialTime prop changes', () => {
-      const { result, rerender } = renderHook(
-        ({ initialTime }) => useTimer({ initialTime }),
-        { initialProps: { initialTime: 300 } },
-      );
+      const { result, rerender } = renderHook(({ initialTime }) => useTimer({ initialTime }), {
+        initialProps: { initialTime: 300 },
+      });
 
       expect(result.current.timeRemaining).toBe(300);
 

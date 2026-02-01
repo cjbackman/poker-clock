@@ -1,6 +1,16 @@
 import { useState } from 'react';
 import { useTournament } from '@/hooks/useTournament';
-import { Settings, X, ChevronRight, ChevronDown, Percent, DollarSign, Plus, Trash, RotateCcw } from 'lucide-react';
+import {
+  Settings,
+  X,
+  ChevronRight,
+  ChevronDown,
+  Percent,
+  DollarSign,
+  Plus,
+  Trash,
+  RotateCcw,
+} from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -12,37 +22,37 @@ import { blindStructures } from '@/lib/blindStructures';
 import { playButtonClickSound } from '@/lib/audio';
 
 const OrganizerPanel = () => {
-  const { 
-    tournament, 
-    updateSettings, 
-    updateBlindStructure, 
-    updatePrizeDistribution, 
+  const {
+    tournament,
+    updateSettings,
+    updateBlindStructure,
+    updatePrizeDistribution,
     toggleSettingsPanel,
     updateCustomBlindStructure,
     addBlindLevel,
     removeBlindLevel,
     updateBlindLevel,
-    resetTournament
+    resetTournament,
   } = useTournament();
-  
+
   const { settings, isPanelOpen } = tournament;
   const { buyInAmount, reBuyAmount, prizeDistribution } = settings;
-  
+
   const [expandedSections, setExpandedSections] = useState({
     buyins: true,
     structure: false,
     prizes: false,
     reset: false,
   });
-  
+
   const toggleSection = (section: keyof typeof expandedSections) => {
-    setExpandedSections(prev => ({
+    setExpandedSections((prev) => ({
       ...prev,
-      [section]: !prev[section]
+      [section]: !prev[section],
     }));
     playButtonClickSound();
   };
-  
+
   const handleBuyInAmountChange = (value: string) => {
     const newAmount = parseInt(value) || 0;
     updateSettings({
@@ -50,7 +60,7 @@ const OrganizerPanel = () => {
     });
     playButtonClickSound();
   };
-  
+
   const handleReBuyAmountChange = (value: string) => {
     const newAmount = parseInt(value) || 0;
     updateSettings({
@@ -58,42 +68,49 @@ const OrganizerPanel = () => {
     });
     playButtonClickSound();
   };
-  
+
   const handlePrizeDistributionTypeChange = (type: 'percentage' | 'fixed') => {
     updatePrizeDistribution({ type });
     playButtonClickSound();
   };
-  
+
   const handleAddBlindLevel = () => {
-    const lastLevel = tournament.settings.blindStructure.levels[tournament.settings.blindStructure.levels.length - 1];
+    const lastLevel =
+      tournament.settings.blindStructure.levels[
+        tournament.settings.blindStructure.levels.length - 1
+      ];
     const newLevel = {
       id: lastLevel.id + 1,
       smallBlind: lastLevel.smallBlind * 2,
       bigBlind: lastLevel.bigBlind * 2,
       ante: lastLevel.ante > 0 ? lastLevel.ante * 2 : 0,
-      duration: lastLevel.duration
+      duration: lastLevel.duration,
     };
-    
+
     addBlindLevel(newLevel);
     playButtonClickSound();
   };
-  
+
   const handleRemoveBlindLevel = (levelId: number) => {
     removeBlindLevel(levelId);
     playButtonClickSound();
   };
-  
-  const handleUpdateBlindLevel = (levelId: number, field: 'smallBlind' | 'bigBlind' | 'ante' | 'duration', value: number) => {
+
+  const handleUpdateBlindLevel = (
+    levelId: number,
+    field: 'smallBlind' | 'bigBlind' | 'ante' | 'duration',
+    value: number,
+  ) => {
     if (field === 'duration') {
       updateBlindLevel(levelId, field, value);
     } else {
       updateBlindLevel(levelId, field, value);
     }
   };
-  
+
   const handleDurationChange = (levelId: number, value: string) => {
     const trimmedValue = value.trim();
-    
+
     if (trimmedValue.endsWith('s')) {
       const seconds = parseInt(trimmedValue.slice(0, -1));
       if (!isNaN(seconds)) {
@@ -102,16 +119,16 @@ const OrganizerPanel = () => {
     } else {
       const minutes = parseInt(trimmedValue);
       if (!isNaN(minutes)) {
-        updateBlindLevel(levelId, 'duration', (minutes * 60) || 60);
+        updateBlindLevel(levelId, 'duration', minutes * 60 || 60);
       }
     }
   };
-  
+
   const handleResetTournament = () => {
     resetTournament(true);
     playButtonClickSound();
   };
-  
+
   if (!isPanelOpen) {
     return (
       <Button
@@ -124,7 +141,7 @@ const OrganizerPanel = () => {
       </Button>
     );
   }
-  
+
   return (
     <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex justify-end">
       <div className="w-full max-w-md bg-background border-l shadow-lg overflow-y-auto animate-slide-in-right">
@@ -133,9 +150,9 @@ const OrganizerPanel = () => {
             <Settings className="h-5 w-5" />
             Organizer Settings
           </h2>
-          <Button 
-            variant="ghost" 
-            size="icon" 
+          <Button
+            variant="ghost"
+            size="icon"
             className="rounded-full"
             onClick={toggleSettingsPanel}
           >
@@ -143,17 +160,21 @@ const OrganizerPanel = () => {
             <span className="sr-only">Close</span>
           </Button>
         </div>
-        
+
         <div className="p-4 space-y-6">
           <div className="space-y-3">
-            <button 
+            <button
               className="w-full flex items-center justify-between"
               onClick={() => toggleSection('buyins')}
             >
               <h3 className="text-lg font-medium">Buy-in & Rebuy Settings</h3>
-              {expandedSections.buyins ? <ChevronDown className="h-5 w-5" /> : <ChevronRight className="h-5 w-5" />}
+              {expandedSections.buyins ? (
+                <ChevronDown className="h-5 w-5" />
+              ) : (
+                <ChevronRight className="h-5 w-5" />
+              )}
             </button>
-            
+
             {expandedSections.buyins && (
               <div className="space-y-4 pt-2 pl-2">
                 <div className="space-y-2">
@@ -169,7 +190,7 @@ const OrganizerPanel = () => {
                     />
                   </div>
                 </div>
-                
+
                 <div className="space-y-2">
                   <Label htmlFor="rebuy-amount">Rebuy Amount</Label>
                   <div className="flex gap-2 items-center">
@@ -186,24 +207,28 @@ const OrganizerPanel = () => {
               </div>
             )}
           </div>
-          
+
           <Separator />
-          
+
           <div className="space-y-3">
-            <button 
+            <button
               className="w-full flex items-center justify-between"
               onClick={() => toggleSection('structure')}
             >
               <h3 className="text-lg font-medium">Blind Structure</h3>
-              {expandedSections.structure ? <ChevronDown className="h-5 w-5" /> : <ChevronRight className="h-5 w-5" />}
+              {expandedSections.structure ? (
+                <ChevronDown className="h-5 w-5" />
+              ) : (
+                <ChevronRight className="h-5 w-5" />
+              )}
             </button>
-            
+
             {expandedSections.structure && (
               <div className="space-y-4 pt-2 pl-2">
                 <div className="space-y-2">
                   <Label>Select Blind Structure</Label>
                   <div className="space-y-2">
-                    <RadioGroup 
+                    <RadioGroup
                       defaultValue={settings.blindStructure.name.toLowerCase()}
                       onValueChange={(value) => {
                         updateBlindStructure(value);
@@ -214,7 +239,7 @@ const OrganizerPanel = () => {
                         <div key={key} className="flex items-center space-x-2">
                           <RadioGroupItem value={key} id={`structure-${key}`} />
                           <Label htmlFor={`structure-${key}`} className="cursor-pointer">
-                            {blindStructures[key].name} 
+                            {blindStructures[key].name}
                             <span className="text-xs text-muted-foreground ml-1">
                               ({blindStructures[key].levels.length} levels)
                             </span>
@@ -224,15 +249,15 @@ const OrganizerPanel = () => {
                     </RadioGroup>
                   </div>
                 </div>
-                
+
                 <Separator />
-                
+
                 <div className="space-y-2">
                   <div className="flex justify-between items-center">
                     <Label>Custom Blind Levels</Label>
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
+                    <Button
+                      variant="outline"
+                      size="sm"
                       onClick={handleAddBlindLevel}
                       className="h-8 gap-1"
                     >
@@ -240,58 +265,91 @@ const OrganizerPanel = () => {
                       Add Level
                     </Button>
                   </div>
-                  
+
                   <div className="space-y-4 mt-4 max-h-60 overflow-y-auto pr-2">
                     {tournament.settings.blindStructure.levels.map((level) => (
-                      <div key={level.id} className="grid grid-cols-12 gap-2 items-center border p-3 rounded-md relative">
+                      <div
+                        key={level.id}
+                        className="grid grid-cols-12 gap-2 items-center border p-3 rounded-md relative"
+                      >
                         <div className="col-span-3 flex flex-col">
-                          <Label htmlFor={`small-blind-${level.id}`} className="text-xs mb-1">Small</Label>
+                          <Label htmlFor={`small-blind-${level.id}`} className="text-xs mb-1">
+                            Small
+                          </Label>
                           <Input
                             id={`small-blind-${level.id}`}
                             type="number"
                             min="1"
                             value={level.smallBlind}
-                            onChange={(e) => handleUpdateBlindLevel(level.id, 'smallBlind', parseInt(e.target.value) || 0)}
+                            onChange={(e) =>
+                              handleUpdateBlindLevel(
+                                level.id,
+                                'smallBlind',
+                                parseInt(e.target.value) || 0,
+                              )
+                            }
                             className="h-8 text-sm"
                           />
                         </div>
-                        
+
                         <div className="col-span-3 flex flex-col">
-                          <Label htmlFor={`big-blind-${level.id}`} className="text-xs mb-1">Big</Label>
+                          <Label htmlFor={`big-blind-${level.id}`} className="text-xs mb-1">
+                            Big
+                          </Label>
                           <Input
                             id={`big-blind-${level.id}`}
                             type="number"
                             min="1"
                             value={level.bigBlind}
-                            onChange={(e) => handleUpdateBlindLevel(level.id, 'bigBlind', parseInt(e.target.value) || 0)}
+                            onChange={(e) =>
+                              handleUpdateBlindLevel(
+                                level.id,
+                                'bigBlind',
+                                parseInt(e.target.value) || 0,
+                              )
+                            }
                             className="h-8 text-sm"
                           />
                         </div>
-                        
+
                         <div className="col-span-3 flex flex-col">
-                          <Label htmlFor={`ante-${level.id}`} className="text-xs mb-1">Ante</Label>
+                          <Label htmlFor={`ante-${level.id}`} className="text-xs mb-1">
+                            Ante
+                          </Label>
                           <Input
                             id={`ante-${level.id}`}
                             type="number"
                             min="0"
                             value={level.ante}
-                            onChange={(e) => handleUpdateBlindLevel(level.id, 'ante', parseInt(e.target.value) || 0)}
+                            onChange={(e) =>
+                              handleUpdateBlindLevel(
+                                level.id,
+                                'ante',
+                                parseInt(e.target.value) || 0,
+                              )
+                            }
                             className="h-8 text-sm"
                           />
                         </div>
-                        
+
                         <div className="col-span-3 flex flex-col">
-                          <Label htmlFor={`duration-${level.id}`} className="text-xs mb-1">Min</Label>
+                          <Label htmlFor={`duration-${level.id}`} className="text-xs mb-1">
+                            Min
+                          </Label>
                           <Input
                             id={`duration-${level.id}`}
                             type="text"
-                            value={level.duration % 60 === 0 ? Math.floor(level.duration / 60) : `${level.duration}s`}
+                            value={
+                              level.duration % 60 === 0
+                                ? Math.floor(level.duration / 60)
+                                : `${level.duration}s`
+                            }
                             onChange={(e) => handleDurationChange(level.id, e.target.value)}
                             className="h-8 text-sm"
                             title="Enter minutes or seconds with 's' suffix (e.g. '5' for 5 minutes or '300s' for 300 seconds)"
                           />
                         </div>
-                        
+
                         {tournament.settings.blindStructure.levels.length > 1 && (
                           <Button
                             variant="ghost"
@@ -310,25 +368,31 @@ const OrganizerPanel = () => {
               </div>
             )}
           </div>
-          
+
           <Separator />
-          
+
           <div className="space-y-3">
-            <button 
+            <button
               className="w-full flex items-center justify-between"
               onClick={() => toggleSection('prizes')}
             >
               <h3 className="text-lg font-medium">Prize Distribution</h3>
-              {expandedSections.prizes ? <ChevronDown className="h-5 w-5" /> : <ChevronRight className="h-5 w-5" />}
+              {expandedSections.prizes ? (
+                <ChevronDown className="h-5 w-5" />
+              ) : (
+                <ChevronRight className="h-5 w-5" />
+              )}
             </button>
-            
+
             {expandedSections.prizes && (
               <div className="space-y-4 pt-2 pl-2">
                 <div className="space-y-2">
                   <Label>Distribution Type</Label>
                   <Tabs
                     defaultValue={prizeDistribution.type}
-                    onValueChange={(value) => handlePrizeDistributionTypeChange(value as 'percentage' | 'fixed')}
+                    onValueChange={(value) =>
+                      handlePrizeDistributionTypeChange(value as 'percentage' | 'fixed')
+                    }
                     className="w-full"
                   >
                     <TabsList className="grid w-full grid-cols-2">
@@ -341,7 +405,7 @@ const OrganizerPanel = () => {
                         Fixed Amount
                       </TabsTrigger>
                     </TabsList>
-                    
+
                     <TabsContent value="percentage" className="space-y-4 mt-4">
                       <div className="space-y-4">
                         <div className="space-y-2">
@@ -353,13 +417,15 @@ const OrganizerPanel = () => {
                               min="0"
                               max="100"
                               value={prizeDistribution.first}
-                              onChange={(e) => updatePrizeDistribution({ first: parseFloat(e.target.value) || 0 })}
+                              onChange={(e) =>
+                                updatePrizeDistribution({ first: parseFloat(e.target.value) || 0 })
+                              }
                               className="w-full"
                             />
                             <span className="text-muted-foreground">%</span>
                           </div>
                         </div>
-                        
+
                         <div className="space-y-2">
                           <Label htmlFor="second-place-pct">2nd Place Percentage</Label>
                           <div className="flex gap-2 items-center">
@@ -369,13 +435,15 @@ const OrganizerPanel = () => {
                               min="0"
                               max="100"
                               value={prizeDistribution.second}
-                              onChange={(e) => updatePrizeDistribution({ second: parseFloat(e.target.value) || 0 })}
+                              onChange={(e) =>
+                                updatePrizeDistribution({ second: parseFloat(e.target.value) || 0 })
+                              }
                               className="w-full"
                             />
                             <span className="text-muted-foreground">%</span>
                           </div>
                         </div>
-                        
+
                         <div className="space-y-2">
                           <Label htmlFor="third-place-pct">3rd Place Percentage</Label>
                           <div className="flex gap-2 items-center">
@@ -385,26 +453,40 @@ const OrganizerPanel = () => {
                               min="0"
                               max="100"
                               value={prizeDistribution.third}
-                              onChange={(e) => updatePrizeDistribution({ third: parseFloat(e.target.value) || 0 })}
+                              onChange={(e) =>
+                                updatePrizeDistribution({ third: parseFloat(e.target.value) || 0 })
+                              }
                               className="w-full"
                             />
                             <span className="text-muted-foreground">%</span>
                           </div>
                         </div>
-                        
+
                         <div className="text-sm">
-                          <div className={`${
-                            prizeDistribution.first + prizeDistribution.second + prizeDistribution.third !== 100 
-                            ? 'text-poker-red' : 'text-muted-foreground'
-                          }`}>
-                            Total: {prizeDistribution.first + prizeDistribution.second + prizeDistribution.third}%
-                            {prizeDistribution.first + prizeDistribution.second + prizeDistribution.third !== 100 && 
-                              " (should equal 100%)"}
+                          <div
+                            className={`${
+                              prizeDistribution.first +
+                                prizeDistribution.second +
+                                prizeDistribution.third !==
+                              100
+                                ? 'text-poker-red'
+                                : 'text-muted-foreground'
+                            }`}
+                          >
+                            Total:{' '}
+                            {prizeDistribution.first +
+                              prizeDistribution.second +
+                              prizeDistribution.third}
+                            %
+                            {prizeDistribution.first +
+                              prizeDistribution.second +
+                              prizeDistribution.third !==
+                              100 && ' (should equal 100%)'}
                           </div>
                         </div>
                       </div>
                     </TabsContent>
-                    
+
                     <TabsContent value="fixed" className="mt-4 space-y-4">
                       <div className="space-y-4">
                         <div className="space-y-2">
@@ -415,12 +497,14 @@ const OrganizerPanel = () => {
                               type="number"
                               min="0"
                               value={prizeDistribution.first}
-                              onChange={(e) => updatePrizeDistribution({ first: parseFloat(e.target.value) || 0 })}
+                              onChange={(e) =>
+                                updatePrizeDistribution({ first: parseFloat(e.target.value) || 0 })
+                              }
                               className="w-full"
                             />
                           </div>
                         </div>
-                        
+
                         <div className="space-y-2">
                           <Label htmlFor="second-place-fixed">2nd Place Amount</Label>
                           <div className="flex gap-2 items-center">
@@ -429,12 +513,14 @@ const OrganizerPanel = () => {
                               type="number"
                               min="0"
                               value={prizeDistribution.second}
-                              onChange={(e) => updatePrizeDistribution({ second: parseFloat(e.target.value) || 0 })}
+                              onChange={(e) =>
+                                updatePrizeDistribution({ second: parseFloat(e.target.value) || 0 })
+                              }
                               className="w-full"
                             />
                           </div>
                         </div>
-                        
+
                         <div className="space-y-2">
                           <Label htmlFor="third-place-fixed">3rd Place Amount</Label>
                           <div className="flex gap-2 items-center">
@@ -443,7 +529,9 @@ const OrganizerPanel = () => {
                               type="number"
                               min="0"
                               value={prizeDistribution.third}
-                              onChange={(e) => updatePrizeDistribution({ third: parseFloat(e.target.value) || 0 })}
+                              onChange={(e) =>
+                                updatePrizeDistribution({ third: parseFloat(e.target.value) || 0 })
+                              }
                               className="w-full"
                             />
                           </div>
@@ -455,28 +543,32 @@ const OrganizerPanel = () => {
               </div>
             )}
           </div>
-          
+
           <Separator />
-          
+
           <div className="space-y-3">
-            <button 
+            <button
               className="w-full flex items-center justify-between"
               onClick={() => toggleSection('reset')}
             >
               <h3 className="text-lg font-medium">Reset Tournament</h3>
-              {expandedSections.reset ? <ChevronDown className="h-5 w-5" /> : <ChevronRight className="h-5 w-5" />}
+              {expandedSections.reset ? (
+                <ChevronDown className="h-5 w-5" />
+              ) : (
+                <ChevronRight className="h-5 w-5" />
+              )}
             </button>
-            
+
             {expandedSections.reset && (
               <div className="space-y-4 pt-2 pl-2">
                 <p className="text-sm text-muted-foreground">
-                  Resetting the tournament will clear all settings, buy-ins, and restore everything to default values.
-                  This action cannot be undone.
+                  Resetting the tournament will clear all settings, buy-ins, and restore everything
+                  to default values. This action cannot be undone.
                 </p>
-                
-                <Button 
-                  variant="reset" 
-                  size="lg" 
+
+                <Button
+                  variant="reset"
+                  size="lg"
                   className="w-full flex items-center justify-center gap-2"
                   onClick={handleResetTournament}
                 >

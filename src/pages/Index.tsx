@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { TournamentProvider } from '@/hooks/useTournament';
 import Layout from '@/components/Layout';
@@ -11,16 +10,16 @@ import { Loader2 } from 'lucide-react';
 
 const PokerClock = () => {
   const [loading, setLoading] = useState(true);
-  
+
   // Simulate initial loading
   useEffect(() => {
     const timer = setTimeout(() => {
       setLoading(false);
     }, 800);
-    
+
     return () => clearTimeout(timer);
   }, []);
-  
+
   if (loading) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-white">
@@ -31,7 +30,7 @@ const PokerClock = () => {
       </div>
     );
   }
-  
+
   return (
     <TournamentProvider>
       <Layout>
@@ -41,25 +40,25 @@ const PokerClock = () => {
             <Timer />
           </div>
         </div>
-        
+
         {/* Bottom Half - Three Columns */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 h-[35vh]">
           {/* Prize Pool - Left */}
           <div className="h-full">
             <PrizePool />
           </div>
-          
+
           {/* Blinds - Middle */}
           <div className="h-full flex items-center justify-center">
             <BlindDisplay />
           </div>
-          
+
           {/* Buy-ins and Rebuys - Right */}
           <div className="h-full">
             <BuyInsPanel />
           </div>
         </div>
-        
+
         {/* Organizer Panel (Settings) */}
         <OrganizerPanel />
       </Layout>

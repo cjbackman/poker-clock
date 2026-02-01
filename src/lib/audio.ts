@@ -1,4 +1,3 @@
-
 export const playButtonClickSound = () => {
   const audio = new Audio('/sounds/button-click.mp3');
   audio.play();
