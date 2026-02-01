@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "homepage": "https://cjbackman.github.io/poker-timer-playhouse",
+  "homepage": "https://cjbackman.github.io/poker-clock",
   "scripts": {
     "dev": "vite",
     "build": "vite build",

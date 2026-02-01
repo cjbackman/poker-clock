@@ -31,7 +31,7 @@ Poker Clock is a **poker tournament timer and management application**. It provi
 
 ### Live deployment
 
-- Hosted on **GitHub Pages**: `https://cjbackman.github.io/poker-timer-playhouse/`
+- Hosted on **GitHub Pages**: `https://cjbackman.github.io/poker-clock/`
 - Fully client-side, no backend required
 - Works offline after initial load
 
@@ -368,7 +368,7 @@ Heuristics:
 ## Known quirks and gotchas
 
 - **Timer auto-start after level advance** uses `setTimeout(0)` to avoid stale closure in `advanceToNextLevel` (`useTournament.tsx:329`). Do not refactor this to a synchronous call without verifying timer behavior.
-- **Audio paths assume base path `/sounds/`** - in production the base path is `/poker-timer-playhouse/`. Audio files are in `public/sounds/`. If audio breaks, check Vite base path config.
+- **Audio paths assume base path `/sounds/`** - in production the base path is `/poker-clock/`. Audio files are in `public/sounds/`. If audio breaks, check Vite base path config.
 - **TypeScript is not strict** (`strictNullChecks: false`). Many values can be `null`/`undefined` without compiler warnings. Be defensive when accessing optional data.
 - **`@typescript-eslint/no-unused-vars` is disabled** in ESLint config. Dead code won't trigger lint errors - clean up manually.
 - **No CI pipeline exists.** Tests and lint must be run locally. Do not assume a safety net.

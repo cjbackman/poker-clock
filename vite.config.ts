@@ -5,7 +5,7 @@ import { componentTagger } from "lovable-tagger";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
-  base: mode === "production" ? "/poker-timer-playhouse/" : "/",
+  base: mode === "production" ? "/poker-clock/" : "/",
   server: {
     host: "::",
     port: 8080,
