@@ -73,3 +73,15 @@ Test files are co-located with the source files they test, using the `.test.tsx`
 ```sh
 npm run dev
 ```
+
+## Deploy
+
+The app is hosted on [GitHub Pages](https://cjbackman.github.io/poker-clock) as a fully client-side application.
+
+To deploy:
+
+```sh
+npm run deploy
+```
+
+This runs `vite build` (with production base path `/poker-clock/`) and pushes the `dist/` folder to the `gh-pages` branch via the `gh-pages` package.
