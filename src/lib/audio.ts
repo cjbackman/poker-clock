@@ -1,24 +1,24 @@
+const playSound = (path: string) => {
+  const audio = new Audio(path);
+  audio.play().catch(() => {});
+};
+
 export const playButtonClickSound = () => {
-  const audio = new Audio('/sounds/button-click.mp3');
-  audio.play();
+  playSound('/sounds/button-click.mp3');
 };
 
 export const playBlindChangeSound = () => {
-  const audio = new Audio('/sounds/blind-change.mp3');
-  audio.play();
+  playSound('/sounds/blind-change.mp3');
 };
 
 export const playSuccessSound = () => {
-  const audio = new Audio('/sounds/success.mp3');
-  audio.play();
+  playSound('/sounds/success.mp3');
 };
 
 export const playNotificationSound = () => {
-  const audio = new Audio('/sounds/notification.mp3');
-  audio.play();
+  playSound('/sounds/notification.mp3');
 };
 
 export const playTimerEndSound = () => {
-  const audio = new Audio('/sounds/blind-change.mp3'); // Reusing blind-change sound for timer end
-  audio.play();
+  playSound('/sounds/blind-change.mp3');
 };

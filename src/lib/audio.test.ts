@@ -12,7 +12,7 @@ describe('audio', () => {
   let audioInstances: { src: string }[];
 
   beforeEach(() => {
-    playSpy = vi.fn();
+    playSpy = vi.fn().mockResolvedValue(undefined);
     audioInstances = [];
 
     vi.stubGlobal(
