@@ -19,7 +19,10 @@ export default tseslint.config(
     },
     rules: {
       ...reactHooks.configs.recommended.rules,
-      'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
+      'react-refresh/only-export-components': [
+        'warn',
+        { allowConstantExport: true, allowExportNames: ['useTournament'] },
+      ],
       '@typescript-eslint/no-unused-vars': 'off',
       '@typescript-eslint/no-require-imports': 'off',
     },
@@ -28,6 +31,7 @@ export default tseslint.config(
     files: ['src/components/ui/**/*.{ts,tsx}'],
     rules: {
       '@typescript-eslint/no-empty-object-type': 'off',
+      'react-refresh/only-export-components': 'off',
     },
   },
 );

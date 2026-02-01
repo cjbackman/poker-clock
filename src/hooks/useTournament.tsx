@@ -426,9 +426,10 @@ export const TournamentProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   // Reset timer when current level changes
+  const { reset: resetTimer } = timer;
   useEffect(() => {
-    timer.reset(currentLevel.duration);
-  }, [currentLevel.duration]);
+    resetTimer(currentLevel.duration);
+  }, [currentLevel.duration, resetTimer]);
 
   // Create the context value
   const contextValue: TournamentContextValue = {
