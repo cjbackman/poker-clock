@@ -548,5 +548,57 @@ describe('useTournament', () => {
       const savedState = saveSpy.mock.calls[saveSpy.mock.calls.length - 1][0];
       expect(savedState.buyIns).toBe(1);
     });
+
+    it('initializes timer with saved timeRemaining from localStorage', () => {
+      const saved = {
+        settings: {
+          title: 'Saved Game',
+          buyInAmount: 200,
+          reBuyAmount: 100,
+          blindStructure: {
+            name: 'Test',
+            levels: [{ id: 1, smallBlind: 5, bigBlind: 10, ante: 0, duration: 600 }],
+          },
+          prizeDistribution: { type: 'percentage', first: 60, second: 30, third: 10 },
+        },
+        buyIns: 0,
+        reBuys: 0,
+        currentLevelId: 1,
+        isBlindChangeAlert: false,
+        isPanelOpen: false,
+      };
+      localStorage.setItem('poker-tournament-settings', JSON.stringify(saved));
+      localStorage.setItem('poker-timer-remaining', '245');
+
+      const { result } = renderHook(() => useTournament(), { wrapper });
+
+      // Timer should show the saved 245 seconds, not the full 600 duration
+      expect(result.current.timer.timeRemaining).toBe(245);
+    });
+
+    it('falls back to level duration when no saved timer remaining exists', () => {
+      const saved = {
+        settings: {
+          title: 'Saved Game',
+          buyInAmount: 200,
+          reBuyAmount: 100,
+          blindStructure: {
+            name: 'Test',
+            levels: [{ id: 1, smallBlind: 5, bigBlind: 10, ante: 0, duration: 600 }],
+          },
+          prizeDistribution: { type: 'percentage', first: 60, second: 30, third: 10 },
+        },
+        buyIns: 0,
+        reBuys: 0,
+        currentLevelId: 1,
+        isBlindChangeAlert: false,
+        isPanelOpen: false,
+      };
+      localStorage.setItem('poker-tournament-settings', JSON.stringify(saved));
+
+      const { result } = renderHook(() => useTournament(), { wrapper });
+
+      expect(result.current.timer.timeRemaining).toBe(600);
+    });
   });
 });

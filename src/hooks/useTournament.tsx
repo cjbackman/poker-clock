@@ -1,9 +1,23 @@
-import { useState, useCallback, createContext, useContext, ReactNode, useEffect } from 'react';
+import {
+  useState,
+  useCallback,
+  createContext,
+  useContext,
+  ReactNode,
+  useEffect,
+  useRef,
+} from 'react';
 import { BlindLevel, BlindStructure, blindStructures, getNextLevel } from '@/lib/blindStructures';
 import { useTimer } from './useTimer';
 import { playBlindChangeSound, playSuccessSound, playNotificationSound } from '@/lib/audio';
 import { useToast } from '@/components/ui/use-toast';
-import { saveTournamentState, loadTournamentState, clearTournamentState } from '@/lib/storage';
+import {
+  saveTournamentState,
+  loadTournamentState,
+  clearTournamentState,
+  saveTimerRemaining,
+  loadTimerRemaining,
+} from '@/lib/storage';
 
 // Define types
 export type PrizeDistributionType = 'percentage' | 'fixed';
@@ -121,9 +135,23 @@ export const TournamentProvider = ({ children }: { children: ReactNode }) => {
   // Get the next blind level (if any)
   const nextLevel = getNextLevel(tournament.settings.blindStructure, tournament.currentLevelId);
 
+  // Compute initial timer value once at mount (restore from localStorage if available)
+  const [initialTimeRemaining] = useState(() => {
+    return loadTimerRemaining() ?? currentLevel.duration;
+  });
+
+  // Track initial mount to skip the duration-reset effect on first render
+  const isInitialMount = useRef(true);
+
   // Timer setup with callbacks
   const timer = useTimer({
-    initialTime: currentLevel.duration,
+    initialTime: initialTimeRemaining,
+    onTick: (remaining) => {
+      saveTimerRemaining(remaining);
+    },
+    onTimeChange: (newTime) => {
+      saveTimerRemaining(newTime);
+    },
     onComplete: () => {
       // When the timer completes, show the blind change alert and play a sound
       setTournament((prev) => ({ ...prev, isBlindChangeAlert: true }));
@@ -425,9 +453,13 @@ export const TournamentProvider = ({ children }: { children: ReactNode }) => {
     }));
   }, []);
 
-  // Reset timer when current level changes
+  // Reset timer when current level changes (skip on initial mount to preserve saved time)
   const { reset: resetTimer } = timer;
   useEffect(() => {
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      return;
+    }
     resetTimer(currentLevel.duration);
   }, [currentLevel.duration, resetTimer]);
 

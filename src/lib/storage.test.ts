@@ -1,5 +1,12 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { saveTournamentState, loadTournamentState, clearTournamentState } from './storage';
+import {
+  saveTournamentState,
+  loadTournamentState,
+  clearTournamentState,
+  saveTimerRemaining,
+  loadTimerRemaining,
+  clearTimerRemaining,
+} from './storage';
 import { TournamentState } from '@/hooks/useTournament';
 
 const makeTournamentState = (overrides?: Partial<TournamentState>): TournamentState => ({
@@ -103,6 +110,93 @@ describe('storage', () => {
 
       expect(consoleSpy).toHaveBeenCalledWith(
         'Failed to clear state from localStorage:',
+        expect.any(Error),
+      );
+    });
+
+    it('also clears timer remaining', () => {
+      localStorage.setItem('poker-timer-remaining', '42');
+      clearTournamentState();
+
+      expect(localStorage.getItem('poker-timer-remaining')).toBeNull();
+    });
+  });
+
+  describe('saveTimerRemaining', () => {
+    it('stores the time under the correct key', () => {
+      saveTimerRemaining(300);
+
+      expect(localStorage.getItem('poker-timer-remaining')).toBe('300');
+    });
+
+    it('overwrites previously saved value', () => {
+      saveTimerRemaining(300);
+      saveTimerRemaining(150);
+
+      expect(localStorage.getItem('poker-timer-remaining')).toBe('150');
+    });
+
+    it('handles localStorage errors gracefully', () => {
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+      vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
+        throw new Error('QuotaExceeded');
+      });
+
+      saveTimerRemaining(300);
+
+      expect(consoleSpy).toHaveBeenCalledWith(
+        'Failed to save timer remaining to localStorage:',
+        expect.any(Error),
+      );
+    });
+  });
+
+  describe('loadTimerRemaining', () => {
+    it('returns the saved value when present', () => {
+      localStorage.setItem('poker-timer-remaining', '42');
+
+      expect(loadTimerRemaining()).toBe(42);
+    });
+
+    it('returns null when nothing is saved', () => {
+      expect(loadTimerRemaining()).toBeNull();
+    });
+
+    it('returns null for non-numeric values', () => {
+      localStorage.setItem('poker-timer-remaining', 'abc');
+
+      expect(loadTimerRemaining()).toBeNull();
+    });
+
+    it('returns null for negative values', () => {
+      localStorage.setItem('poker-timer-remaining', '-5');
+
+      expect(loadTimerRemaining()).toBeNull();
+    });
+  });
+
+  describe('clearTimerRemaining', () => {
+    it('removes the saved timer remaining', () => {
+      localStorage.setItem('poker-timer-remaining', '42');
+      clearTimerRemaining();
+
+      expect(localStorage.getItem('poker-timer-remaining')).toBeNull();
+    });
+
+    it('does not throw when key does not exist', () => {
+      expect(() => clearTimerRemaining()).not.toThrow();
+    });
+
+    it('handles localStorage errors gracefully', () => {
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+      vi.spyOn(Storage.prototype, 'removeItem').mockImplementation(() => {
+        throw new Error('SecurityError');
+      });
+
+      clearTimerRemaining();
+
+      expect(consoleSpy).toHaveBeenCalledWith(
+        'Failed to clear timer remaining from localStorage:',
         expect.any(Error),
       );
     });
