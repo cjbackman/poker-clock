@@ -30,7 +30,7 @@ const PokerClock = () => {
             className="h-24 w-24 rounded-full"
           />
           <Loader2 className="h-12 w-12 text-primary animate-spin" />
-          <h1 className="text-2xl font-medium">Loading Poker Clock...</h1>
+          <h1 className="text-2xl font-medium">Getting ready to shuffle up and deal...</h1>
         </div>
       </div>
     );

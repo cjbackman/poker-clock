@@ -84,7 +84,7 @@ export interface TournamentContextValue {
 
 // Default settings
 const defaultSettings: TournamentSettings = {
-  title: 'Poker Tournament',
+  title: 'Juldagspokern',
   buyInAmount: 400,
   reBuyAmount: 400,
   blindStructure: blindStructures.regular,

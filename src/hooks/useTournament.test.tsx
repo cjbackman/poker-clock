@@ -45,7 +45,7 @@ describe('useTournament', () => {
     it('initializes with default settings when nothing in localStorage', () => {
       const { result } = renderHook(() => useTournament(), { wrapper });
 
-      expect(result.current.tournament.settings.title).toBe('Poker Tournament');
+      expect(result.current.tournament.settings.title).toBe('Juldagspokern');
       expect(result.current.tournament.settings.buyInAmount).toBe(400);
       expect(result.current.tournament.settings.reBuyAmount).toBe(400);
       expect(result.current.tournament.buyIns).toBe(0);
@@ -532,7 +532,7 @@ describe('useTournament', () => {
 
       act(() => result.current.resetTournament());
 
-      expect(result.current.tournament.settings.title).toBe('Poker Tournament');
+      expect(result.current.tournament.settings.title).toBe('Juldagspokern');
       expect(result.current.tournament.buyIns).toBe(0);
       expect(result.current.tournament.reBuys).toBe(0);
       expect(result.current.tournament.currentLevelId).toBe(1);
