@@ -10,6 +10,9 @@ import {
   Plus,
   Trash,
   RotateCcw,
+  Timer as TimerIcon,
+  Layers,
+  RefreshCcw,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -33,6 +36,9 @@ const OrganizerPanel = () => {
     removeBlindLevel,
     updateBlindLevel,
     resetTournament,
+    resetCounts,
+    resetLevels,
+    resetTimer,
   } = useTournament();
 
   const { settings, isPanelOpen } = tournament;
@@ -124,8 +130,23 @@ const OrganizerPanel = () => {
     }
   };
 
+  const handleResetTimer = () => {
+    resetTimer();
+    playButtonClickSound();
+  };
+
+  const handleResetLevels = () => {
+    resetLevels();
+    playButtonClickSound();
+  };
+
+  const handleResetCounts = () => {
+    resetCounts();
+    playButtonClickSound();
+  };
+
   const handleResetTournament = () => {
-    resetTournament(true);
+    resetTournament();
     playButtonClickSound();
   };
 
@@ -562,9 +583,37 @@ const OrganizerPanel = () => {
             {expandedSections.reset && (
               <div className="space-y-4 pt-2 pl-2">
                 <p className="text-sm text-muted-foreground">
-                  Resetting the tournament will clear all settings, buy-ins, and restore everything
-                  to default values. This action cannot be undone.
+                  Reset specific parts of the tournament, or reset everything back to defaults.
                 </p>
+
+                <Button
+                  variant="outline"
+                  className="w-full flex items-center justify-center gap-2"
+                  onClick={handleResetTimer}
+                >
+                  <TimerIcon className="h-4 w-4" />
+                  Reset Timer
+                </Button>
+
+                <Button
+                  variant="outline"
+                  className="w-full flex items-center justify-center gap-2"
+                  onClick={handleResetLevels}
+                >
+                  <Layers className="h-4 w-4" />
+                  Reset Levels
+                </Button>
+
+                <Button
+                  variant="outline"
+                  className="w-full flex items-center justify-center gap-2"
+                  onClick={handleResetCounts}
+                >
+                  <RefreshCcw className="h-4 w-4" />
+                  Reset Buy-ins & Rebuys
+                </Button>
+
+                <Separator />
 
                 <Button
                   variant="reset"
@@ -573,7 +622,7 @@ const OrganizerPanel = () => {
                   onClick={handleResetTournament}
                 >
                   <RotateCcw className="h-5 w-5" />
-                  Reset All Tournament Settings
+                  Reset Everything
                 </Button>
               </div>
             )}

@@ -175,37 +175,6 @@ describe('Timer', () => {
     expect(audioModule.playButtonClickSound).toHaveBeenCalledTimes(1);
   });
 
-  it('renders reset button', () => {
-    render(
-      <TournamentProvider>
-        <Timer />
-      </TournamentProvider>,
-    );
-
-    const resetButton = screen.getByRole('button', { name: /reset/i });
-    expect(resetButton).toBeInTheDocument();
-  });
-
-  it('calls resetTournament when reset button is clicked', () => {
-    const resetTournamentMock = vi.fn();
-    vi.mocked(useTournament).mockImplementationOnce(() => ({
-      ...useTournament(),
-      resetTournament: resetTournamentMock,
-    }));
-
-    render(
-      <TournamentProvider>
-        <Timer />
-      </TournamentProvider>,
-    );
-
-    const resetButton = screen.getByRole('button', { name: /reset/i });
-    fireEvent.click(resetButton);
-
-    expect(resetTournamentMock).toHaveBeenCalledWith(false);
-    expect(audioModule.playButtonClickSound).toHaveBeenCalledTimes(1);
-  });
-
   it('timer automatically starts when advancing to a new level', () => {
     // Use fake timers from Vitest
     vi.useFakeTimers();

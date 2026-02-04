@@ -66,7 +66,9 @@ export interface TournamentContextValue {
   removeReBuy: () => void;
   resetCounts: () => void;
   advanceToNextLevel: () => void;
-  resetTournament: (clearStorage?: boolean) => void;
+  resetLevels: () => void;
+  resetTimer: () => void;
+  resetTournament: () => void;
   toggleSettingsPanel: () => void;
   dismissAlert: () => void;
 
@@ -349,6 +351,23 @@ export const TournamentProvider = ({ children }: { children: ReactNode }) => {
     setTournament((prev) => ({ ...prev, buyIns: 0, reBuys: 0 }));
   }, []);
 
+  // Reset levels back to level 1
+  const resetLevels = useCallback(() => {
+    setTournament((prev) => ({
+      ...prev,
+      currentLevelId: 1,
+      isBlindChangeAlert: false,
+    }));
+    timer.reset(tournament.settings.blindStructure.levels[0].duration);
+    toast({ title: 'Levels Reset', description: 'Reset to the first level' });
+  }, [timer, toast, tournament.settings.blindStructure.levels]);
+
+  // Reset timer to current level's full duration
+  const resetCurrentTimer = useCallback(() => {
+    timer.reset(currentLevel.duration);
+    toast({ title: 'Timer Reset', description: 'Timer reset to current level duration' });
+  }, [timer, toast, currentLevel.duration]);
+
   // Advance to the next blind level
   const advanceToNextLevel = useCallback(() => {
     console.log('Advancing to next level');
@@ -382,52 +401,26 @@ export const TournamentProvider = ({ children }: { children: ReactNode }) => {
     }
   }, [nextLevel, timer, toast]);
 
-  // Reset the tournament
-  const resetTournament = useCallback(
-    (clearStorage = false) => {
-      if (clearStorage) {
-        // Clear local storage and reset to defaults
-        clearTournamentState();
+  // Reset the tournament completely
+  const resetTournament = useCallback(() => {
+    clearTournamentState();
 
-        setTournament({
-          settings: defaultSettings,
-          buyIns: 0,
-          reBuys: 0,
-          currentLevelId: 1,
-          isBlindChangeAlert: false,
-          isPanelOpen: false,
-        });
+    setTournament({
+      settings: defaultSettings,
+      buyIns: 0,
+      reBuys: 0,
+      currentLevelId: 1,
+      isBlindChangeAlert: false,
+      isPanelOpen: false,
+    });
 
-        // Reset the timer to the first level's duration
-        timer.reset(defaultSettings.blindStructure.levels[0].duration);
+    timer.reset(defaultSettings.blindStructure.levels[0].duration);
 
-        // Show a toast notification
-        toast({
-          title: 'Tournament Completely Reset',
-          description: 'All settings have been restored to defaults',
-          variant: 'default',
-        });
-      } else {
-        // Just reset the current level without clearing storage
-        setTournament((prev) => ({
-          ...prev,
-          currentLevelId: 1,
-          isBlindChangeAlert: false,
-        }));
-
-        // Reset the timer to the first level's duration
-        timer.reset(tournament.settings.blindStructure.levels[0].duration);
-
-        // Show a toast notification
-        toast({
-          title: 'Tournament Reset',
-          description: 'Tournament has been reset to the first level',
-          variant: 'default',
-        });
-      }
-    },
-    [timer, toast, tournament.settings.blindStructure.levels],
-  );
+    toast({
+      title: 'Tournament Completely Reset',
+      description: 'All settings restored to defaults',
+    });
+  }, [timer, toast]);
 
   // Toggle the settings panel
   const toggleSettingsPanel = useCallback(() => {
@@ -454,14 +447,14 @@ export const TournamentProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   // Reset timer when current level changes (skip on initial mount to preserve saved time)
-  const { reset: resetTimer } = timer;
+  const { reset: timerReset } = timer;
   useEffect(() => {
     if (isInitialMount.current) {
       isInitialMount.current = false;
       return;
     }
-    resetTimer(currentLevel.duration);
-  }, [currentLevel.duration, resetTimer]);
+    timerReset(currentLevel.duration);
+  }, [currentLevel.duration, timerReset]);
 
   // Create the context value
   const contextValue: TournamentContextValue = {
@@ -478,6 +471,8 @@ export const TournamentProvider = ({ children }: { children: ReactNode }) => {
     addReBuy,
     removeReBuy,
     resetCounts,
+    resetLevels,
+    resetTimer: resetCurrentTimer,
     advanceToNextLevel,
     resetTournament,
     toggleSettingsPanel,

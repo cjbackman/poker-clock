@@ -1,10 +1,10 @@
 import { useTournament } from '@/hooks/useTournament';
-import { Plus, Minus, DollarSign, RefreshCcw } from 'lucide-react';
+import { Plus, Minus, DollarSign } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { playButtonClickSound } from '@/lib/audio';
 
 const BuyInsPanel = () => {
-  const { tournament, addBuyIn, removeBuyIn, addReBuy, removeReBuy, resetCounts } = useTournament();
+  const { tournament, addBuyIn, removeBuyIn, addReBuy, removeReBuy } = useTournament();
 
   const { buyIns, reBuys } = tournament;
   const { buyInAmount, reBuyAmount } = tournament.settings;
@@ -94,22 +94,6 @@ const BuyInsPanel = () => {
 
           <div className="text-sm">Total: {reBuys * reBuyAmount}</div>
         </div>
-      </div>
-
-      {/* Quick Actions */}
-      <div className="mt-auto flex items-center justify-end">
-        <Button
-          variant="ghost"
-          size="sm"
-          className="text-muted-foreground"
-          onClick={() => {
-            resetCounts();
-            playButtonClickSound();
-          }}
-        >
-          <RefreshCcw className="h-3 w-3 mr-1" />
-          Reset Counts
-        </Button>
       </div>
     </div>
   );

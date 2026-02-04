@@ -472,20 +472,57 @@ describe('useTournament', () => {
     });
   });
 
-  describe('tournament reset', () => {
-    it('resetTournament without clearStorage resets level to 1', () => {
+  describe('reset levels', () => {
+    it('resetLevels resets level to 1', () => {
       const { result } = renderHook(() => useTournament(), { wrapper });
 
       act(() => result.current.advanceToNextLevel());
       act(() => vi.runAllTimers());
 
-      act(() => result.current.resetTournament(false));
+      act(() => result.current.resetLevels());
 
       expect(result.current.tournament.currentLevelId).toBe(1);
       expect(result.current.tournament.isBlindChangeAlert).toBe(false);
     });
+  });
 
-    it('resetTournament with clearStorage restores all defaults', () => {
+  describe('reset timer', () => {
+    it('resetTimer resets timer to current level duration', () => {
+      const { result } = renderHook(() => useTournament(), { wrapper });
+
+      // Start and partially run the timer
+      act(() => result.current.timer.start());
+      act(() => vi.advanceTimersByTime(5000));
+      act(() => result.current.timer.pause());
+
+      const levelDuration = result.current.currentLevel.duration;
+      expect(result.current.timer.timeRemaining).toBeLessThan(levelDuration);
+
+      act(() => result.current.resetTimer());
+
+      expect(result.current.timer.timeRemaining).toBe(levelDuration);
+    });
+
+    it('resetTimer keeps current level and buy-ins unchanged', () => {
+      const { result } = renderHook(() => useTournament(), { wrapper });
+
+      act(() => result.current.addBuyIn());
+      act(() => result.current.addBuyIn());
+      act(() => result.current.advanceToNextLevel());
+      act(() => vi.runAllTimers());
+
+      const levelBefore = result.current.tournament.currentLevelId;
+      const buyInsBefore = result.current.tournament.buyIns;
+
+      act(() => result.current.resetTimer());
+
+      expect(result.current.tournament.currentLevelId).toBe(levelBefore);
+      expect(result.current.tournament.buyIns).toBe(buyInsBefore);
+    });
+  });
+
+  describe('tournament reset', () => {
+    it('resetTournament restores all defaults', () => {
       const { result } = renderHook(() => useTournament(), { wrapper });
 
       // Modify state
@@ -493,7 +530,7 @@ describe('useTournament', () => {
       act(() => result.current.addReBuy());
       act(() => result.current.updateSettings({ title: 'Modified' }));
 
-      act(() => result.current.resetTournament(true));
+      act(() => result.current.resetTournament());
 
       expect(result.current.tournament.settings.title).toBe('Poker Tournament');
       expect(result.current.tournament.buyIns).toBe(0);
@@ -501,11 +538,11 @@ describe('useTournament', () => {
       expect(result.current.tournament.currentLevelId).toBe(1);
     });
 
-    it('resetTournament with clearStorage clears localStorage', () => {
+    it('resetTournament clears localStorage', () => {
       const clearSpy = vi.spyOn(storageModule, 'clearTournamentState');
       const { result } = renderHook(() => useTournament(), { wrapper });
 
-      act(() => result.current.resetTournament(true));
+      act(() => result.current.resetTournament());
 
       expect(clearSpy).toHaveBeenCalled();
     });
