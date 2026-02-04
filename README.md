@@ -28,18 +28,21 @@ This application is built with Vite, React, TypeScript, and Tailwind CSS. Here's
 - `src/components/BlindDisplay.tsx` - Displays current and next blind levels
 - `src/components/PrizePool.tsx` - Shows prize distribution
 - `src/components/BuyInsPanel.tsx` - Manages tournament buy-ins
+- `src/components/TournamentTitle.tsx` - Editable tournament title
 - `src/components/OrganizerPanel.tsx` - Settings panel for tournament organizers
 
 ### State Management
 
 - `src/hooks/useTournament.tsx` - Main tournament state and functions
 - `src/hooks/useTimer.tsx` - Timer logic and controls
+- `src/hooks/useKeyboardControls.tsx` - Keyboard shortcut handling
 
 ### Utilities
 
 - `src/lib/blindStructures.ts` - Predefined blind structures
 - `src/lib/audio.ts` - Audio effects for timer events
 - `src/lib/timerUtils.ts` - Utility functions for timer-related operations
+- `src/lib/storage.ts` - localStorage persistence for tournament state
 
 ## Install
 
