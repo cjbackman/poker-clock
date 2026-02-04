@@ -43,7 +43,7 @@ const Timer = () => {
         role="timer"
         className={`text-8xl md:text-[12rem] xl:text-[14rem] font-mono tracking-tight transition-all duration-300 ease-in-out
           ${animate ? 'scale-105 text-primary' : 'scale-100'} 
-          ${isNearEnd ? 'text-poker-red' : 'text-foreground'}`}
+          ${isNearEnd ? 'text-poker-red' : 'text-poker-gold'}`}
       >
         <span className={`inline-block ${animate ? 'digit-change' : ''}`}>{formattedMinutes}</span>
         <span className="mx-1">:</span>
