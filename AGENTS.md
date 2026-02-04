@@ -374,7 +374,6 @@ Heuristics:
 - **TypeScript is not strict** (`strictNullChecks: false`). Many values can be `null`/`undefined` without compiler warnings. Be defensive when accessing optional data.
 - **`@typescript-eslint/no-unused-vars` is disabled** in ESLint config. Dead code won't trigger lint errors - clean up manually.
 - **No CI pipeline exists.** Tests and lint must be run locally. Do not assume a safety net.
-- **`lovable-tagger` plugin** runs in dev mode only (injects component metadata). It is safe to ignore; do not remove without asking.
 
 ## Institutional memory (compounding section)
 
@@ -397,7 +396,7 @@ Purpose:
 
 ### 2026-02-01 - Initial AGENTS.md creation
 
-Context: Repository had no agent configuration. Codebase was scaffolded via Lovable (AI code generator) and manually refined.
+Context: Repository had no agent configuration. Codebase was originally scaffolded via an AI code generator and manually refined.
 State: 3 test files covering Timer, useKeyboardControls, and timerUtils. No CI. No pre-commit hooks. TypeScript strict mode off.
 Lesson: When onboarding to a generated codebase, audit the config before assuming standard tooling exists. This repo has no CI, no git hooks, and relaxed TypeScript settings.
 
