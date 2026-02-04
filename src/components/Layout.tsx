@@ -13,14 +13,7 @@ const Layout = ({ children }: LayoutProps) => {
     <div className="min-h-screen w-full flex flex-col bg-background poker-bg">
       {/* Header with title */}
       <header className="w-full py-4 px-6 border-b border-white/10 sticky top-0 bg-background/80 backdrop-blur-sm z-10">
-        <div className="flex items-center gap-3">
-          <img
-            src={`${import.meta.env.BASE_URL}logo.png`}
-            alt="Poker Clock"
-            className="h-10 w-10 rounded-full"
-          />
-          <TournamentTitle />
-        </div>
+        <TournamentTitle />
       </header>
 
       {/* Main content */}

@@ -119,9 +119,25 @@
     @apply bg-white/5 backdrop-blur-md shadow-glass border border-white/10;
   }
 
-  /* Poker room background gradient */
+  /* Poker room background with centered logo watermark */
   .poker-bg {
+    position: relative;
     background: radial-gradient(ellipse at 50% 40%, hsl(218 25% 12%) 0%, hsl(220 30% 8%) 70%);
+  }
+
+  .poker-bg::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: url('/logo.png') center center / 85vh no-repeat;
+    opacity: 0.4;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .poker-bg > * {
+    position: relative;
+    z-index: 1;
   }
 
   /* Button animations */
