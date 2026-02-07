@@ -1,14 +1,11 @@
 import { ReactNode } from 'react';
 import TournamentTitle from './TournamentTitle';
-import { useTournament } from '@/hooks/useTournament';
 
 interface LayoutProps {
   children: ReactNode;
 }
 
 const Layout = ({ children }: LayoutProps) => {
-  const { tournament } = useTournament();
-
   return (
     <div className="min-h-screen w-full flex flex-col bg-background poker-bg">
       {/* Header with title */}
@@ -18,15 +15,6 @@ const Layout = ({ children }: LayoutProps) => {
 
       {/* Main content */}
       <main className="flex-1 p-4 md:p-6 lg:p-8 container">{children}</main>
-
-      {/* Footer */}
-      <footer className="w-full py-3 border-t border-white/10 text-center text-sm text-muted-foreground">
-        <p>
-          <span className="opacity-60">
-            Level {tournament.currentLevelId} of {tournament.settings.blindStructure.levels.length}
-          </span>
-        </p>
-      </footer>
     </div>
   );
 };
