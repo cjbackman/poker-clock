@@ -107,12 +107,12 @@ const TournamentTitle = () => {
         </div>
       ) : (
         <h1
-          className="text-2xl sm:text-3xl md:text-4xl font-bold italic py-2 flex items-center gap-2 cursor-pointer group text-poker-gold tracking-wide"
+          className="relative text-2xl sm:text-3xl md:text-4xl font-bold italic py-2 cursor-pointer group text-poker-gold tracking-wide text-center"
           style={{ fontFamily: "'Georgia', 'Times New Roman', serif" }}
           onClick={() => setIsEditing(true)}
         >
           {renderColoredTitle(tournament.settings.title)}
-          <Edit className="h-4 w-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+          <Edit className="absolute -right-6 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
         </h1>
       )}
     </div>
