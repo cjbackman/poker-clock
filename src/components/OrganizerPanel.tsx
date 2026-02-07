@@ -153,8 +153,14 @@ const OrganizerPanel = () => {
   }
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex justify-end">
-      <div className="w-full max-w-md bg-background border-l shadow-lg overflow-y-auto animate-slide-in-right">
+    <div
+      className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex justify-end"
+      onClick={toggleSettingsPanel}
+    >
+      <div
+        className="w-full max-w-md bg-background border-l shadow-lg overflow-y-auto animate-slide-in-right"
+        onClick={(e) => e.stopPropagation()}
+      >
         <div className="p-4 sticky top-0 bg-background/80 backdrop-blur-sm z-10 border-b flex items-center justify-between">
           <h2 className="text-xl font-semibold flex items-center gap-2">
             <Settings className="h-5 w-5" />
