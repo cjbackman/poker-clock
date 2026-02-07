@@ -24,11 +24,6 @@ const PokerClock = () => {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-background poker-bg">
         <div className="flex flex-col items-center gap-4">
-          <img
-            src={`${import.meta.env.BASE_URL}logo.png`}
-            alt="Poker Clock"
-            className="h-24 w-24 rounded-full"
-          />
           <Loader2 className="h-12 w-12 text-primary animate-spin" />
           <h1 className="text-2xl font-medium">Getting ready to shuffle up and deal...</h1>
         </div>
