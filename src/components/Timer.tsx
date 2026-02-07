@@ -41,11 +41,11 @@ const Timer = () => {
   const isNearEnd = shouldShowBlindChangeAlert(timer.timeRemaining);
 
   return (
-    <div className="flex flex-col items-center justify-center gap-10 h-full">
+    <div className="flex flex-col items-center justify-center gap-4 md:gap-10 h-full">
       {/* Timer Display - Even Larger for the new layout */}
       <div
         role="timer"
-        className={`text-8xl md:text-[12rem] xl:text-[14rem] font-mono tracking-tight transition-all duration-300 ease-in-out
+        className={`text-7xl sm:text-8xl md:text-[12rem] xl:text-[14rem] font-mono tracking-tight transition-all duration-300 ease-in-out
           ${animate ? 'scale-105 text-primary' : 'scale-100'}
           ${isNearEnd ? 'text-poker-red' : 'text-poker-gold'}`}
       >

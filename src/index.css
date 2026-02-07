@@ -129,7 +129,7 @@
     content: '';
     position: fixed;
     inset: 0;
-    background: url('/logo.png') center center / 85vh no-repeat;
+    background: url('/logo.png') center center / 50vh no-repeat;
     opacity: 0.4;
     pointer-events: none;
     z-index: 0;

@@ -40,14 +40,14 @@ const PokerClock = () => {
     <TournamentProvider>
       <Layout>
         {/* Timer - Top Half */}
-        <div className="mb-8 h-[45vh]">
-          <div className="glass rounded-3xl p-6 md:p-10 w-full h-full flex items-center justify-center shadow-lg">
+        <div className="mb-4 md:mb-8 h-[35vh] md:h-[45vh]">
+          <div className="glass rounded-3xl p-4 md:p-10 w-full h-full flex items-center justify-center shadow-lg">
             <Timer />
           </div>
         </div>
 
         {/* Bottom Half - Three Columns */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 h-[35vh]">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 md:h-[35vh]">
           {/* Prize Pool - Left */}
           <div className="h-full">
             <PrizePool />

@@ -32,7 +32,7 @@ const BlindDisplay = () => {
         <div className="text-sm uppercase tracking-wide text-muted-foreground mb-2">
           Current Blinds
         </div>
-        <div className="text-5xl md:text-6xl font-semibold text-poker-gold">
+        <div className="text-3xl sm:text-5xl md:text-6xl font-semibold text-poker-gold">
           {currentLevel.smallBlind} / {currentLevel.bigBlind}
         </div>
         {currentLevel.ante > 0 && (
