@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useTournament } from '@/hooks/useTournament';
 import { Play, Pause } from 'lucide-react';
-import { playButtonClickSound } from '@/lib/audio';
+import { playTournamentStartSound } from '@/lib/audio';
 import { Button } from '@/components/ui/button';
 import { useKeyboardControls } from '@/hooks/useKeyboardControls';
 import { shouldShowBlindChangeAlert } from '@/lib/timerUtils';
@@ -10,20 +10,24 @@ const Timer = () => {
   const { timer, currentLevel } = useTournament();
   const [animate, setAnimate] = useState(false);
 
+  const handlePlayPause = () => {
+    if (timer.isRunning) {
+      timer.pause();
+    } else {
+      if (currentLevel.id === 1 && timer.timeRemaining === currentLevel.duration) {
+        playTournamentStartSound();
+      }
+      if (timer.isPaused) {
+        timer.resume();
+      } else {
+        timer.start();
+      }
+    }
+  };
+
   // Set up keyboard controls for play/pause with spacebar
   useKeyboardControls({
-    onSpacePress: () => {
-      if (timer.isRunning) {
-        timer.pause();
-      } else {
-        if (timer.isPaused) {
-          timer.resume();
-        } else {
-          timer.start();
-        }
-      }
-      playButtonClickSound();
-    },
+    onSpacePress: handlePlayPause,
   });
 
   // Create a visual timer display
@@ -42,7 +46,7 @@ const Timer = () => {
       <div
         role="timer"
         className={`text-8xl md:text-[12rem] xl:text-[14rem] font-mono tracking-tight transition-all duration-300 ease-in-out
-          ${animate ? 'scale-105 text-primary' : 'scale-100'} 
+          ${animate ? 'scale-105 text-primary' : 'scale-100'}
           ${isNearEnd ? 'text-poker-red' : 'text-poker-gold'}`}
       >
         <span className={`inline-block ${animate ? 'digit-change' : ''}`}>{formattedMinutes}</span>
@@ -58,10 +62,7 @@ const Timer = () => {
             variant="outline"
             size="lg"
             className="h-16 w-16 rounded-full shadow-button hover:shadow-button-hover transition-all duration-300 border-2"
-            onClick={() => {
-              timer.pause();
-              playButtonClickSound();
-            }}
+            onClick={handlePlayPause}
           >
             <Pause className="h-8 w-8" />
             <span className="sr-only">Pause</span>
@@ -71,14 +72,7 @@ const Timer = () => {
             variant="default"
             size="lg"
             className="h-16 w-16 rounded-full shadow-button hover:shadow-button-hover transition-all duration-300 bg-poker-accent hover:bg-poker-accent/90 border-2 border-poker-accent/20"
-            onClick={() => {
-              if (timer.isPaused) {
-                timer.resume();
-              } else {
-                timer.start();
-              }
-              playButtonClickSound();
-            }}
+            onClick={handlePlayPause}
           >
             <Play className="h-8 w-8 ml-1" />
             <span className="sr-only">Play</span>

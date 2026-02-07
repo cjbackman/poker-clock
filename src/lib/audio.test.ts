@@ -1,11 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import {
-  playButtonClickSound,
-  playBlindChangeSound,
-  playSuccessSound,
-  playNotificationSound,
-  playTimerEndSound,
-} from './audio';
+import { playBlindCountdownSound, playBlindRaiseSound, playTournamentStartSound } from './audio';
 
 describe('audio', () => {
   let playSpy: ReturnType<typeof vi.fn>;
@@ -25,38 +19,24 @@ describe('audio', () => {
     );
   });
 
-  it('playButtonClickSound creates Audio with correct path and calls play', () => {
-    playButtonClickSound();
+  it('playBlindCountdownSound creates Audio with correct path and calls play', () => {
+    playBlindCountdownSound();
     expect(audioInstances).toHaveLength(1);
-    expect(audioInstances[0].src).toBe('/sounds/button-click.mp3');
+    expect(audioInstances[0].src).toBe('/sounds/blind-countdown.mp3');
     expect(playSpy).toHaveBeenCalledTimes(1);
   });
 
-  it('playBlindChangeSound creates Audio with correct path and calls play', () => {
-    playBlindChangeSound();
+  it('playBlindRaiseSound creates Audio with correct path and calls play', () => {
+    playBlindRaiseSound();
     expect(audioInstances).toHaveLength(1);
-    expect(audioInstances[0].src).toBe('/sounds/blind-change.mp3');
+    expect(audioInstances[0].src).toBe('/sounds/blind-raise.mp3');
     expect(playSpy).toHaveBeenCalledTimes(1);
   });
 
-  it('playSuccessSound creates Audio with correct path and calls play', () => {
-    playSuccessSound();
+  it('playTournamentStartSound creates Audio with correct path and calls play', () => {
+    playTournamentStartSound();
     expect(audioInstances).toHaveLength(1);
-    expect(audioInstances[0].src).toBe('/sounds/success.mp3');
-    expect(playSpy).toHaveBeenCalledTimes(1);
-  });
-
-  it('playNotificationSound creates Audio with correct path and calls play', () => {
-    playNotificationSound();
-    expect(audioInstances).toHaveLength(1);
-    expect(audioInstances[0].src).toBe('/sounds/notification.mp3');
-    expect(playSpy).toHaveBeenCalledTimes(1);
-  });
-
-  it('playTimerEndSound reuses the blind-change sound path', () => {
-    playTimerEndSound();
-    expect(audioInstances).toHaveLength(1);
-    expect(audioInstances[0].src).toBe('/sounds/blind-change.mp3');
+    expect(audioInstances[0].src).toBe('/sounds/tournament-start.mp3');
     expect(playSpy).toHaveBeenCalledTimes(1);
   });
 });

@@ -1,5 +1,4 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { playBlindChangeSound, playTimerEndSound } from '@/lib/audio';
 
 export interface TimerOptions {
   initialTime: number; // Initial time in seconds
@@ -84,9 +83,6 @@ export const useTimer = ({
               clearInterval(intervalRef.current);
               intervalRef.current = null;
             }
-
-            // Play sound when timer completes
-            playTimerEndSound();
 
             // Call onComplete callback
             if (callbackRef.current.onComplete) {

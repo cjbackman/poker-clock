@@ -5,8 +5,9 @@ import { useTimer } from './useTimer';
 // Audio is mocked globally in test/setup.ts via HTMLMediaElement.prototype.play
 
 vi.mock('@/lib/audio', () => ({
-  playBlindChangeSound: vi.fn(),
-  playTimerEndSound: vi.fn(),
+  playBlindCountdownSound: vi.fn(),
+  playBlindRaiseSound: vi.fn(),
+  playTournamentStartSound: vi.fn(),
 }));
 
 describe('useTimer', () => {

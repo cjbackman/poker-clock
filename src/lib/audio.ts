@@ -1,24 +1,16 @@
 const playSound = (path: string) => {
-  const audio = new Audio(path);
+  const audio = new Audio(`${import.meta.env.BASE_URL}${path}`);
   audio.play().catch(() => {});
 };
 
-export const playButtonClickSound = () => {
-  playSound('/sounds/button-click.mp3');
+export const playBlindCountdownSound = () => {
+  playSound('sounds/blind-countdown.mp3');
 };
 
-export const playBlindChangeSound = () => {
-  playSound('/sounds/blind-change.mp3');
+export const playBlindRaiseSound = () => {
+  playSound('sounds/blind-raise.mp3');
 };
 
-export const playSuccessSound = () => {
-  playSound('/sounds/success.mp3');
-};
-
-export const playNotificationSound = () => {
-  playSound('/sounds/notification.mp3');
-};
-
-export const playTimerEndSound = () => {
-  playSound('/sounds/blind-change.mp3');
+export const playTournamentStartSound = () => {
+  playSound('sounds/tournament-start.mp3');
 };

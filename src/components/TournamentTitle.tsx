@@ -1,7 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { useTournament } from '@/hooks/useTournament';
 import { Edit, Check } from 'lucide-react';
-import { playButtonClickSound } from '@/lib/audio';
 
 const TournamentTitle = () => {
   const { tournament, updateSettings } = useTournament();
@@ -27,7 +26,6 @@ const TournamentTitle = () => {
       setTitleValue(tournament.settings.title);
     }
     setIsEditing(false);
-    playButtonClickSound();
   };
 
   // Handle key press
@@ -66,10 +64,7 @@ const TournamentTitle = () => {
       ) : (
         <h1
           className="text-2xl sm:text-3xl md:text-4xl font-semibold py-2 flex items-center gap-2 cursor-pointer group"
-          onClick={() => {
-            setIsEditing(true);
-            playButtonClickSound();
-          }}
+          onClick={() => setIsEditing(true)}
         >
           {tournament.settings.title}
           <Edit className="h-4 w-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity duration-300" />

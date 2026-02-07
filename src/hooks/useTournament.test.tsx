@@ -6,11 +6,9 @@ import * as storageModule from '@/lib/storage';
 import * as audioModule from '@/lib/audio';
 
 vi.mock('@/lib/audio', () => ({
-  playButtonClickSound: vi.fn(),
-  playBlindChangeSound: vi.fn(),
-  playSuccessSound: vi.fn(),
-  playNotificationSound: vi.fn(),
-  playTimerEndSound: vi.fn(),
+  playBlindCountdownSound: vi.fn(),
+  playBlindRaiseSound: vi.fn(),
+  playTournamentStartSound: vi.fn(),
 }));
 
 vi.mock('@/components/ui/use-toast', () => ({
@@ -153,13 +151,6 @@ describe('useTournament', () => {
       expect(result.current.tournament.buyIns).toBe(2);
     });
 
-    it('addBuyIn plays success sound', () => {
-      const { result } = renderHook(() => useTournament(), { wrapper });
-
-      act(() => result.current.addBuyIn());
-      expect(audioModule.playSuccessSound).toHaveBeenCalledTimes(1);
-    });
-
     it('removeBuyIn decrements buy-in count', () => {
       const { result } = renderHook(() => useTournament(), { wrapper });
 
@@ -184,13 +175,6 @@ describe('useTournament', () => {
 
       act(() => result.current.addReBuy());
       expect(result.current.tournament.reBuys).toBe(1);
-    });
-
-    it('addReBuy plays success sound', () => {
-      const { result } = renderHook(() => useTournament(), { wrapper });
-
-      act(() => result.current.addReBuy());
-      expect(audioModule.playSuccessSound).toHaveBeenCalledTimes(1);
     });
 
     it('removeReBuy decrements rebuy count', () => {
@@ -411,8 +395,8 @@ describe('useTournament', () => {
       // Advance past the 2-second duration so the timer completes
       act(() => vi.advanceTimersByTime(3000));
 
-      // onComplete should have fired: blind change sound played, level advanced
-      expect(audioModule.playBlindChangeSound).toHaveBeenCalled();
+      // onComplete should have fired: blind raise sound played, level advanced
+      expect(audioModule.playBlindRaiseSound).toHaveBeenCalled();
       expect(result.current.tournament.currentLevelId).toBe(2);
     });
 
@@ -443,7 +427,7 @@ describe('useTournament', () => {
       act(() => vi.advanceTimersByTime(3000));
 
       // Should have played sound and set alert, but NOT advanced (no next level)
-      expect(audioModule.playBlindChangeSound).toHaveBeenCalled();
+      expect(audioModule.playBlindRaiseSound).toHaveBeenCalled();
       expect(result.current.tournament.currentLevelId).toBe(1);
       expect(result.current.tournament.isBlindChangeAlert).toBe(true);
     });
@@ -460,15 +444,6 @@ describe('useTournament', () => {
 
       expect(result.current.tournament.currentLevelId).toBe(2);
       expect(result.current.tournament.isBlindChangeAlert).toBe(false);
-    });
-
-    it('advanceToNextLevel plays notification sound', () => {
-      const { result } = renderHook(() => useTournament(), { wrapper });
-
-      act(() => result.current.advanceToNextLevel());
-      act(() => vi.runAllTimers());
-
-      expect(audioModule.playNotificationSound).toHaveBeenCalled();
     });
   });
 

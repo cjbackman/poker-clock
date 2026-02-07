@@ -22,7 +22,6 @@ import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Separator } from '@/components/ui/separator';
 import { blindStructures } from '@/lib/blindStructures';
-import { playButtonClickSound } from '@/lib/audio';
 
 const OrganizerPanel = () => {
   const {
@@ -56,7 +55,6 @@ const OrganizerPanel = () => {
       ...prev,
       [section]: !prev[section],
     }));
-    playButtonClickSound();
   };
 
   const handleBuyInAmountChange = (value: string) => {
@@ -64,7 +62,6 @@ const OrganizerPanel = () => {
     updateSettings({
       buyInAmount: newAmount > 0 ? newAmount : 1,
     });
-    playButtonClickSound();
   };
 
   const handleReBuyAmountChange = (value: string) => {
@@ -72,12 +69,10 @@ const OrganizerPanel = () => {
     updateSettings({
       reBuyAmount: newAmount > 0 ? newAmount : 1,
     });
-    playButtonClickSound();
   };
 
   const handlePrizeDistributionTypeChange = (type: 'percentage' | 'fixed') => {
     updatePrizeDistribution({ type });
-    playButtonClickSound();
   };
 
   const handleAddBlindLevel = () => {
@@ -94,12 +89,10 @@ const OrganizerPanel = () => {
     };
 
     addBlindLevel(newLevel);
-    playButtonClickSound();
   };
 
   const handleRemoveBlindLevel = (levelId: number) => {
     removeBlindLevel(levelId);
-    playButtonClickSound();
   };
 
   const handleUpdateBlindLevel = (
@@ -132,22 +125,18 @@ const OrganizerPanel = () => {
 
   const handleResetTimer = () => {
     resetTimer();
-    playButtonClickSound();
   };
 
   const handleResetLevels = () => {
     resetLevels();
-    playButtonClickSound();
   };
 
   const handleResetCounts = () => {
     resetCounts();
-    playButtonClickSound();
   };
 
   const handleResetTournament = () => {
     resetTournament();
-    playButtonClickSound();
   };
 
   if (!isPanelOpen) {
@@ -253,7 +242,6 @@ const OrganizerPanel = () => {
                       defaultValue={settings.blindStructure.name.toLowerCase()}
                       onValueChange={(value) => {
                         updateBlindStructure(value);
-                        playButtonClickSound();
                       }}
                     >
                       {Object.keys(blindStructures).map((key) => (

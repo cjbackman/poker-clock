@@ -1,7 +1,6 @@
 import { useTournament } from '@/hooks/useTournament';
 import { Plus, Minus, DollarSign } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { playButtonClickSound } from '@/lib/audio';
 
 const BuyInsPanel = () => {
   const { tournament, addBuyIn, removeBuyIn, addReBuy, removeReBuy } = useTournament();
@@ -26,10 +25,7 @@ const BuyInsPanel = () => {
                 variant="outline"
                 size="sm"
                 className="h-8 w-8 p-0 rounded-full"
-                onClick={() => {
-                  removeBuyIn();
-                  playButtonClickSound();
-                }}
+                onClick={removeBuyIn}
                 disabled={buyIns === 0}
               >
                 <Minus className="h-4 w-4" />
@@ -42,10 +38,7 @@ const BuyInsPanel = () => {
                 variant="outline"
                 size="sm"
                 className="h-8 w-8 p-0 rounded-full"
-                onClick={() => {
-                  addBuyIn();
-                  playButtonClickSound();
-                }}
+                onClick={addBuyIn}
               >
                 <Plus className="h-4 w-4" />
                 <span className="sr-only">Add Buy-in</span>
@@ -65,10 +58,7 @@ const BuyInsPanel = () => {
                 variant="outline"
                 size="sm"
                 className="h-8 w-8 p-0 rounded-full"
-                onClick={() => {
-                  removeReBuy();
-                  playButtonClickSound();
-                }}
+                onClick={removeReBuy}
                 disabled={reBuys === 0}
               >
                 <Minus className="h-4 w-4" />
@@ -81,10 +71,7 @@ const BuyInsPanel = () => {
                 variant="outline"
                 size="sm"
                 className="h-8 w-8 p-0 rounded-full"
-                onClick={() => {
-                  addReBuy();
-                  playButtonClickSound();
-                }}
+                onClick={addReBuy}
               >
                 <Plus className="h-4 w-4" />
                 <span className="sr-only">Add Rebuy</span>

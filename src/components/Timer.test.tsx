@@ -7,11 +7,9 @@ import { act } from '@testing-library/react';
 
 // Mock audio functions
 vi.mock('@/lib/audio', () => ({
-  playButtonClickSound: vi.fn(),
-  playBlindChangeSound: vi.fn(),
-  playTimerEndSound: vi.fn(),
-  playSuccessSound: vi.fn(),
-  playNotificationSound: vi.fn(),
+  playBlindCountdownSound: vi.fn(),
+  playBlindRaiseSound: vi.fn(),
+  playTournamentStartSound: vi.fn(),
 }));
 
 // Mock use-toast to avoid implementation details
@@ -146,7 +144,7 @@ describe('Timer', () => {
     expect(playButton).toBeInTheDocument();
   });
 
-  it('plays sound when play button is clicked', () => {
+  it('plays tournament start sound when play button is clicked for the first time', () => {
     render(
       <TournamentProvider>
         <Timer />
@@ -157,8 +155,8 @@ describe('Timer', () => {
     const playButton = screen.getByRole('button', { name: /play/i });
     fireEvent.click(playButton);
 
-    // Check if sound function was called
-    expect(audioModule.playButtonClickSound).toHaveBeenCalledTimes(1);
+    // Check if tournament start sound was called
+    expect(audioModule.playTournamentStartSound).toHaveBeenCalledTimes(1);
   });
 
   it('responds to spacebar keyboard control', () => {
@@ -171,8 +169,8 @@ describe('Timer', () => {
     // Simulate spacebar keydown
     fireEvent.keyDown(window, { code: 'Space' });
 
-    // Check if sound function was called
-    expect(audioModule.playButtonClickSound).toHaveBeenCalledTimes(1);
+    // Check if tournament start sound was called
+    expect(audioModule.playTournamentStartSound).toHaveBeenCalledTimes(1);
   });
 
   it('timer automatically starts when advancing to a new level', () => {

@@ -9,7 +9,7 @@ import {
 } from 'react';
 import { BlindLevel, BlindStructure, blindStructures, getNextLevel } from '@/lib/blindStructures';
 import { useTimer } from './useTimer';
-import { playBlindChangeSound, playSuccessSound, playNotificationSound } from '@/lib/audio';
+import { playBlindCountdownSound, playBlindRaiseSound } from '@/lib/audio';
 import { useToast } from '@/components/ui/use-toast';
 import {
   saveTournamentState,
@@ -145,11 +145,20 @@ export const TournamentProvider = ({ children }: { children: ReactNode }) => {
   // Track initial mount to skip the duration-reset effect on first render
   const isInitialMount = useRef(true);
 
+  // Track whether the countdown sound has been played for the current level
+  const countdownPlayed = useRef(false);
+
   // Timer setup with callbacks
   const timer = useTimer({
     initialTime: initialTimeRemaining,
     onTick: (remaining) => {
       saveTimerRemaining(remaining);
+
+      // Play countdown sound 5 seconds before blind change
+      if (remaining <= 5 && remaining > 0 && !countdownPlayed.current) {
+        playBlindCountdownSound();
+        countdownPlayed.current = true;
+      }
     },
     onTimeChange: (newTime) => {
       saveTimerRemaining(newTime);
@@ -157,7 +166,7 @@ export const TournamentProvider = ({ children }: { children: ReactNode }) => {
     onComplete: () => {
       // When the timer completes, show the blind change alert and play a sound
       setTournament((prev) => ({ ...prev, isBlindChangeAlert: true }));
-      playBlindChangeSound();
+      playBlindRaiseSound();
 
       // Show a toast notification
       toast({
@@ -321,7 +330,6 @@ export const TournamentProvider = ({ children }: { children: ReactNode }) => {
   // Add a buy-in
   const addBuyIn = useCallback(() => {
     setTournament((prev) => ({ ...prev, buyIns: prev.buyIns + 1 }));
-    playSuccessSound();
   }, []);
 
   // Remove a buy-in
@@ -335,7 +343,6 @@ export const TournamentProvider = ({ children }: { children: ReactNode }) => {
   // Add a re-buy
   const addReBuy = useCallback(() => {
     setTournament((prev) => ({ ...prev, reBuys: prev.reBuys + 1 }));
-    playSuccessSound();
   }, []);
 
   // Remove a re-buy
@@ -353,6 +360,7 @@ export const TournamentProvider = ({ children }: { children: ReactNode }) => {
 
   // Reset levels back to level 1
   const resetLevels = useCallback(() => {
+    countdownPlayed.current = false;
     setTournament((prev) => ({
       ...prev,
       currentLevelId: 1,
@@ -364,6 +372,7 @@ export const TournamentProvider = ({ children }: { children: ReactNode }) => {
 
   // Reset timer to current level's full duration
   const resetCurrentTimer = useCallback(() => {
+    countdownPlayed.current = false;
     timer.reset(currentLevel.duration);
     toast({ title: 'Timer Reset', description: 'Timer reset to current level duration' });
   }, [timer, toast, currentLevel.duration]);
@@ -378,6 +387,9 @@ export const TournamentProvider = ({ children }: { children: ReactNode }) => {
         isBlindChangeAlert: false,
       }));
 
+      // Reset the countdown sound flag for the new level
+      countdownPlayed.current = false;
+
       // Reset the timer to the new level's duration
       console.log('Resetting timer with duration:', nextLevel.duration);
       timer.reset(nextLevel.duration);
@@ -388,9 +400,6 @@ export const TournamentProvider = ({ children }: { children: ReactNode }) => {
         console.log('Starting timer after level change');
         timer.start();
       }, 0);
-
-      // Play a notification sound
-      playNotificationSound();
 
       // Show a toast notification
       toast({
@@ -403,6 +412,7 @@ export const TournamentProvider = ({ children }: { children: ReactNode }) => {
 
   // Reset the tournament completely
   const resetTournament = useCallback(() => {
+    countdownPlayed.current = false;
     clearTournamentState();
 
     setTournament({
