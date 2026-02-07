@@ -43,7 +43,9 @@ describe('useTournament', () => {
     it('initializes with default settings when nothing in localStorage', () => {
       const { result } = renderHook(() => useTournament(), { wrapper });
 
-      expect(result.current.tournament.settings.title).toBe('Juldagspokern');
+      expect(result.current.tournament.settings.title).toBe(
+        `♣♦ Juldagspokern ${new Date().getFullYear()} ♥♠`,
+      );
       expect(result.current.tournament.settings.buyInAmount).toBe(400);
       expect(result.current.tournament.settings.reBuyAmount).toBe(400);
       expect(result.current.tournament.buyIns).toBe(0);
@@ -115,10 +117,10 @@ describe('useTournament', () => {
       // Add some buy-ins to create a pool
       act(() => result.current.addBuyIn());
       act(() => result.current.addBuyIn());
-      // pool = 800, default: 50/35/15
+      // pool = 800, default: 60/25/15
 
-      expect(result.current.prizes.first).toBe(400);
-      expect(result.current.prizes.second).toBe(280);
+      expect(result.current.prizes.first).toBe(480);
+      expect(result.current.prizes.second).toBe(200);
       expect(result.current.prizes.third).toBe(120);
     });
 
@@ -240,7 +242,7 @@ describe('useTournament', () => {
       act(() => result.current.updatePrizeDistribution({ first: 70 }));
       expect(result.current.tournament.settings.prizeDistribution.first).toBe(70);
       // Others unchanged
-      expect(result.current.tournament.settings.prizeDistribution.second).toBe(35);
+      expect(result.current.tournament.settings.prizeDistribution.second).toBe(25);
     });
   });
 
@@ -507,7 +509,9 @@ describe('useTournament', () => {
 
       act(() => result.current.resetTournament());
 
-      expect(result.current.tournament.settings.title).toBe('Juldagspokern');
+      expect(result.current.tournament.settings.title).toBe(
+        `♣♦ Juldagspokern ${new Date().getFullYear()} ♥♠`,
+      );
       expect(result.current.tournament.buyIns).toBe(0);
       expect(result.current.tournament.reBuys).toBe(0);
       expect(result.current.tournament.currentLevelId).toBe(1);

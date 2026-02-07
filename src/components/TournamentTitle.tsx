@@ -1,6 +1,50 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, ReactNode } from 'react';
 import { useTournament } from '@/hooks/useTournament';
 import { Edit, Check } from 'lucide-react';
+
+const suitStyles: Record<string, { className: string; style?: React.CSSProperties }> = {
+  '♣': {
+    className: 'text-poker-black',
+    style: {
+      textShadow: '-1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff',
+    },
+  },
+  '♠': {
+    className: 'text-poker-black',
+    style: {
+      textShadow: '-1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff',
+    },
+  },
+  '♥': {
+    className: 'text-poker-red',
+    style: {
+      textShadow: '-1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff',
+    },
+  },
+  '♦': {
+    className: 'text-poker-red',
+    style: {
+      textShadow: '-1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff',
+    },
+  },
+};
+
+const suitPattern = /([♣♠♥♦])/g;
+
+const renderColoredTitle = (title: string): ReactNode[] => {
+  const parts = title.split(suitPattern);
+  return parts.map((part, i) => {
+    const suit = suitStyles[part];
+    if (suit) {
+      return (
+        <span key={i} className={suit.className} style={suit.style}>
+          {part}
+        </span>
+      );
+    }
+    return <span key={i}>{part}</span>;
+  });
+};
 
 const TournamentTitle = () => {
   const { tournament, updateSettings } = useTournament();
@@ -63,10 +107,11 @@ const TournamentTitle = () => {
         </div>
       ) : (
         <h1
-          className="text-2xl sm:text-3xl md:text-4xl font-semibold py-2 flex items-center gap-2 cursor-pointer group"
+          className="text-2xl sm:text-3xl md:text-4xl font-bold italic py-2 flex items-center gap-2 cursor-pointer group text-poker-gold tracking-wide"
+          style={{ fontFamily: "'Georgia', 'Times New Roman', serif" }}
           onClick={() => setIsEditing(true)}
         >
-          {tournament.settings.title}
+          {renderColoredTitle(tournament.settings.title)}
           <Edit className="h-4 w-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
         </h1>
       )}

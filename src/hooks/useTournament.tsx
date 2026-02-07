@@ -84,14 +84,14 @@ export interface TournamentContextValue {
 
 // Default settings
 const defaultSettings: TournamentSettings = {
-  title: 'Juldagspokern',
+  title: `♣♦ Juldagspokern ${new Date().getFullYear()} ♥♠`,
   buyInAmount: 400,
   reBuyAmount: 400,
   blindStructure: blindStructures.regular,
   prizeDistribution: {
     type: 'percentage',
-    first: 50,
-    second: 35,
+    first: 60,
+    second: 25,
     third: 15,
   },
 };

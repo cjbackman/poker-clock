@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useTournament } from '@/hooks/useTournament';
 import {
   Settings,
@@ -152,7 +153,7 @@ const OrganizerPanel = () => {
     );
   }
 
-  return (
+  return createPortal(
     <div
       className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex justify-end"
       onClick={toggleSettingsPanel}
@@ -623,7 +624,8 @@ const OrganizerPanel = () => {
           </div>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 };
 
