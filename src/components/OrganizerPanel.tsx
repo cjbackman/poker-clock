@@ -44,6 +44,8 @@ const OrganizerPanel = () => {
   const { settings, isPanelOpen } = tournament;
   const { buyInAmount, reBuyAmount, prizeDistribution } = settings;
 
+  const [draftDurations, setDraftDurations] = useState<Record<number, string>>({});
+
   const [expandedSections, setExpandedSections] = useState({
     buyins: true,
     structure: false,
@@ -108,20 +110,48 @@ const OrganizerPanel = () => {
     }
   };
 
-  const handleDurationChange = (levelId: number, value: string) => {
-    const trimmedValue = value.trim();
-
-    if (trimmedValue.endsWith('s')) {
-      const seconds = parseInt(trimmedValue.slice(0, -1));
-      if (!isNaN(seconds)) {
-        updateBlindLevel(levelId, 'duration', seconds || 60);
-      }
-    } else {
-      const minutes = parseInt(trimmedValue);
-      if (!isNaN(minutes)) {
-        updateBlindLevel(levelId, 'duration', minutes * 60 || 60);
-      }
+  const parseDuration = (value: string): number | null => {
+    const trimmed = value.trim();
+    if (trimmed === '') return null;
+    if (trimmed.endsWith('s')) {
+      const seconds = parseInt(trimmed.slice(0, -1));
+      return !isNaN(seconds) && seconds > 0 ? seconds : null;
     }
+    const minutes = parseInt(trimmed);
+    return !isNaN(minutes) && minutes > 0 ? minutes * 60 : null;
+  };
+
+  const handleDurationInputChange = (levelId: number, value: string) => {
+    setDraftDurations((prev) => ({ ...prev, [levelId]: value }));
+  };
+
+  const handleDurationBlur = (levelId: number) => {
+    const draft = draftDurations[levelId];
+    if (draft === undefined) return;
+    const parsed = parseDuration(draft);
+    if (parsed !== null) {
+      updateBlindLevel(levelId, 'duration', parsed);
+      setDraftDurations((prev) => {
+        const next = { ...prev };
+        delete next[levelId];
+        return next;
+      });
+    }
+  };
+
+  const isDraftInvalid = (levelId: number): boolean => {
+    const draft = draftDurations[levelId];
+    if (draft === undefined) return false;
+    return parseDuration(draft) === null;
+  };
+
+  const hasInvalidDurations = Object.keys(draftDurations).some((key) =>
+    isDraftInvalid(Number(key)),
+  );
+
+  const handleClosePanel = () => {
+    if (hasInvalidDurations) return;
+    toggleSettingsPanel();
   };
 
   const handleResetTimer = () => {
@@ -156,7 +186,7 @@ const OrganizerPanel = () => {
   return createPortal(
     <div
       className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex justify-end"
-      onClick={toggleSettingsPanel}
+      onClick={handleClosePanel}
     >
       <div
         className="w-full max-w-md bg-background border-l shadow-lg overflow-y-auto animate-slide-in-right"
@@ -167,12 +197,7 @@ const OrganizerPanel = () => {
             <Settings className="h-5 w-5" />
             Organizer Settings
           </h2>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="rounded-full"
-            onClick={toggleSettingsPanel}
-          >
+          <Button variant="ghost" size="icon" className="rounded-full" onClick={handleClosePanel}>
             <X className="h-5 w-5" />
             <span className="sr-only">Close</span>
           </Button>
@@ -356,14 +381,20 @@ const OrganizerPanel = () => {
                             id={`duration-${level.id}`}
                             type="text"
                             value={
-                              level.duration % 60 === 0
-                                ? Math.floor(level.duration / 60)
-                                : `${level.duration}s`
+                              draftDurations[level.id] !== undefined
+                                ? draftDurations[level.id]
+                                : level.duration % 60 === 0
+                                  ? Math.floor(level.duration / 60)
+                                  : `${level.duration}s`
                             }
-                            onChange={(e) => handleDurationChange(level.id, e.target.value)}
-                            className="h-8 text-sm"
+                            onChange={(e) => handleDurationInputChange(level.id, e.target.value)}
+                            onBlur={() => handleDurationBlur(level.id)}
+                            className={`h-8 text-sm ${isDraftInvalid(level.id) ? 'border-red-500' : ''}`}
                             title="Enter minutes or seconds with 's' suffix (e.g. '5' for 5 minutes or '300s' for 300 seconds)"
                           />
+                          {isDraftInvalid(level.id) && (
+                            <span className="text-xs text-red-500 mt-0.5">Required</span>
+                          )}
                         </div>
 
                         {tournament.settings.blindStructure.levels.length > 1 && (
