@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import TournamentTitle from './TournamentTitle';
+import Navbar from './Navbar';
 
 interface LayoutProps {
   children: ReactNode;
@@ -8,9 +8,9 @@ interface LayoutProps {
 const Layout = ({ children }: LayoutProps) => {
   return (
     <div className="min-h-screen w-full flex flex-col bg-background poker-bg">
-      {/* Header with title */}
+      {/* Header with navigation */}
       <header className="w-full py-4 px-6 border-b border-white/10 sticky top-0 bg-background/80 backdrop-blur-sm z-10">
-        <TournamentTitle />
+        <Navbar />
       </header>
 
       {/* Main content */}

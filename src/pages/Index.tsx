@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { TournamentProvider } from '@/hooks/useTournament';
 import Layout from '@/components/Layout';
+import TournamentTitle from '@/components/TournamentTitle';
 import Timer from '@/components/Timer';
 import BlindDisplay from '@/components/BlindDisplay';
 import PrizePool from '@/components/PrizePool';
@@ -34,6 +35,11 @@ const PokerClock = () => {
   return (
     <TournamentProvider>
       <Layout>
+        {/* Tournament Title */}
+        <div className="mb-4 md:mb-6">
+          <TournamentTitle />
+        </div>
+
         {/* Timer - Top Half */}
         <div className="mb-4 md:mb-8 h-[35vh] md:h-[45vh]">
           <div className="glass rounded-3xl p-4 md:p-10 w-full h-full flex items-center justify-center shadow-lg">
