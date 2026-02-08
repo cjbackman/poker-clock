@@ -18,7 +18,6 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Separator } from '@/components/ui/separator';
@@ -31,7 +30,6 @@ const OrganizerPanel = () => {
     updateBlindStructure,
     updatePrizeDistribution,
     toggleSettingsPanel,
-    updateCustomBlindStructure,
     addBlindLevel,
     removeBlindLevel,
     updateBlindLevel,
@@ -216,7 +214,7 @@ const OrganizerPanel = () => {
               className="w-full flex items-center justify-between"
               onClick={() => toggleSection('buyins')}
             >
-              <h3 className="text-lg font-medium">Buy-in & Rebuy Settings</h3>
+              <h3 className="text-lg font-medium">Entries</h3>
               {expandedSections.buyins ? (
                 <ChevronDown className="h-5 w-5" />
               ) : (

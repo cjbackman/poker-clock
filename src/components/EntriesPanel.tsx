@@ -2,7 +2,7 @@ import { useTournament } from '@/hooks/useTournament';
 import { Plus, Minus, DollarSign } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-const BuyInsPanel = () => {
+const EntriesPanel = () => {
   const { tournament, addBuyIn, removeBuyIn, addReBuy, removeReBuy } = useTournament();
 
   const { buyIns, reBuys } = tournament;
@@ -11,7 +11,7 @@ const BuyInsPanel = () => {
   return (
     <div className="glass p-6 rounded-2xl h-full flex flex-col">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-lg font-semibold">Buy-ins & Rebuys</h2>
+        <h2 className="text-lg font-semibold">Entries</h2>
         <DollarSign className="h-5 w-5 text-poker-accent" />
       </div>
 
@@ -86,4 +86,4 @@ const BuyInsPanel = () => {
   );
 };
 
-export default BuyInsPanel;
+export default EntriesPanel;

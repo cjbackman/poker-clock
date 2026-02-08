@@ -4,7 +4,7 @@ import TournamentTitle from '@/components/TournamentTitle';
 import Timer from '@/components/Timer';
 import StartStack from '@/components/StartStack';
 import PrizePool from '@/components/PrizePool';
-import BuyInsPanel from '@/components/BuyInsPanel';
+import EntriesPanel from '@/components/EntriesPanel';
 import OrganizerPanel from '@/components/OrganizerPanel';
 import { Loader2 } from 'lucide-react';
 
@@ -61,7 +61,7 @@ const PokerClock = () => {
 
             {/* Buy-ins and Rebuys - Right */}
             <div className="h-full">
-              <BuyInsPanel />
+              <EntriesPanel />
             </div>
           </div>
 
