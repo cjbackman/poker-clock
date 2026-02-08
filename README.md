@@ -1,8 +1,6 @@
-# Poker Tournament Timer
+# Juldagspokern Clock
 
-A professional poker tournament timer and management application.
-
-- [Demo](https://cjbackman.github.io/poker-clock)
+- [Poker Clock](https://cjbackman.github.io/poker-clock)
 
 ## Usage
 
@@ -12,9 +10,10 @@ The timer supports keyboard shortcuts:
 
 Tournament organizers can manage:
 
-- Buy-in amounts and rebuys
+- Buy-in amounts, rebuys, and rent
 - Blind structures (predefined or custom)
 - Prize pool distribution
+- Starting chip stack
 
 ## Repository Navigation
 
@@ -22,12 +21,12 @@ This application is built with Vite, React, TypeScript, and Tailwind CSS. Here's
 
 ### Core Components
 
-- `src/App.tsx` - Main application component
-- `src/components/Layout.tsx` - Page layout and structure
-- `src/components/Timer.tsx` - Tournament timer logic and display
-- `src/components/BlindDisplay.tsx` - Displays current and next blind levels
+- `src/App.tsx` - Application providers and layout wrapper
+- `src/pages/Index.tsx` - Main page layout and structure
+- `src/components/Timer.tsx` - Tournament timer with blind level display
 - `src/components/PrizePool.tsx` - Shows prize distribution
-- `src/components/BuyInsPanel.tsx` - Manages tournament buy-ins
+- `src/components/EntriesPanel.tsx` - Manages buy-ins and rebuys
+- `src/components/StartStack.tsx` - Displays starting chip stack breakdown
 - `src/components/TournamentTitle.tsx` - Editable tournament title
 - `src/components/OrganizerPanel.tsx` - Settings panel for tournament organizers
 
@@ -40,6 +39,7 @@ This application is built with Vite, React, TypeScript, and Tailwind CSS. Here's
 ### Utilities
 
 - `src/lib/blindStructures.ts` - Predefined blind structures
+- `src/lib/chips.ts` - Chip denominations and starting stack total
 - `src/lib/audio.ts` - Audio effects for timer events
 - `src/lib/timerUtils.ts` - Utility functions for timer-related operations
 - `src/lib/storage.ts` - localStorage persistence for tournament state
