@@ -154,8 +154,8 @@ export const TournamentProvider = ({ children }: { children: ReactNode }) => {
     onTick: (remaining) => {
       saveTimerRemaining(remaining);
 
-      // Play countdown sound 5 seconds before blind change
-      if (remaining <= 5 && remaining > 0 && !countdownPlayed.current) {
+      // Play countdown sound 4 seconds before blind change
+      if (remaining <= 4 && remaining > 0 && !countdownPlayed.current) {
         playBlindCountdownSound();
         countdownPlayed.current = true;
       }
