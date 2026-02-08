@@ -53,27 +53,26 @@ export const useTimer = ({
         clearInterval(intervalRef.current);
       }
 
-      // Set the start time and last tick time
-      const startTime = Date.now();
-      let lastTickTime = startTime;
+      // Anchor: real clock time when this run started, and the value at that moment
+      const anchorTime = Date.now();
+      const anchorValue = timeRemainingRef.current;
 
       // Create a new interval
       intervalRef.current = setInterval(() => {
-        const now = Date.now();
-        const deltaTime = Math.floor((now - lastTickTime) / 1000);
-        lastTickTime = now;
+        const elapsed = Math.floor((Date.now() - anchorTime) / 1000);
+        const newRemaining = Math.max(0, anchorValue - elapsed);
 
-        if (deltaTime > 0) {
-          timeRemainingRef.current = Math.max(0, timeRemainingRef.current - deltaTime);
-          setTimeRemaining(timeRemainingRef.current);
+        if (newRemaining !== timeRemainingRef.current) {
+          timeRemainingRef.current = newRemaining;
+          setTimeRemaining(newRemaining);
 
           // Call onTick callback
           if (callbackRef.current.onTick) {
-            callbackRef.current.onTick(timeRemainingRef.current);
+            callbackRef.current.onTick(newRemaining);
           }
 
           // Check if timer is complete
-          if (timeRemainingRef.current === 0) {
+          if (newRemaining === 0) {
             // Stop the timer
             setIsRunning(false);
             isRunningRef.current = false;
