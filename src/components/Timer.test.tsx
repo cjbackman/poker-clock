@@ -10,6 +10,7 @@ vi.mock('@/lib/audio', () => ({
   playBlindCountdownSound: vi.fn(),
   playBlindRaiseSound: vi.fn(),
   playTournamentStartSound: vi.fn(),
+  unlockAudio: vi.fn(),
 }));
 
 // Mock use-toast to avoid implementation details

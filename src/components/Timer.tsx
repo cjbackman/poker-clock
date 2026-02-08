@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useTournament } from '@/hooks/useTournament';
 import { Play, Pause } from 'lucide-react';
-import { playTournamentStartSound } from '@/lib/audio';
+import { playTournamentStartSound, unlockAudio } from '@/lib/audio';
 import { Button } from '@/components/ui/button';
 import { useKeyboardControls } from '@/hooks/useKeyboardControls';
 import { shouldShowBlindChangeAlert } from '@/lib/timerUtils';
@@ -11,6 +11,7 @@ const Timer = () => {
   const [animate, setAnimate] = useState(false);
 
   const handlePlayPause = () => {
+    unlockAudio();
     if (timer.isRunning) {
       timer.pause();
     } else {

@@ -1,9 +1,23 @@
 import '@testing-library/jest-dom';
 import { vi } from 'vitest';
 
-// Mock audio
-window.HTMLMediaElement.prototype.play = vi.fn();
-window.HTMLMediaElement.prototype.pause = vi.fn();
+// Mock Web Audio API
+global.AudioContext = vi.fn().mockImplementation(() => ({
+  state: 'running',
+  resume: vi.fn().mockResolvedValue(undefined),
+  decodeAudioData: vi.fn().mockResolvedValue({ duration: 1 }),
+  destination: {},
+  createBufferSource: vi.fn().mockReturnValue({
+    connect: vi.fn(),
+    start: vi.fn(),
+    buffer: null,
+  }),
+})) as unknown as typeof AudioContext;
+
+// Mock fetch for audio file loading
+global.fetch = vi.fn().mockResolvedValue({
+  arrayBuffer: vi.fn().mockResolvedValue(new ArrayBuffer(8)),
+}) as unknown as typeof fetch;
 
 // Mock ResizeObserver
 global.ResizeObserver = vi.fn().mockImplementation(() => ({
