@@ -1,6 +1,6 @@
 import { useTournament } from '@/hooks/useTournament';
 import { Trophy } from 'lucide-react';
-import { STARTING_STACK_TOTAL } from '@/components/StartStack';
+import { STARTING_STACK_TOTAL } from '@/lib/chips';
 
 const PrizePool = () => {
   const { tournament, prizePool, prizes } = useTournament();
