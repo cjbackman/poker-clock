@@ -42,7 +42,7 @@ const OrganizerPanel = () => {
   } = useTournament();
 
   const { settings, isPanelOpen } = tournament;
-  const { buyInAmount, reBuyAmount, prizeDistribution } = settings;
+  const { buyInAmount, reBuyAmount, rent, prizeDistribution } = settings;
 
   const [draftDurations, setDraftDurations] = useState<Record<number, string>>({});
 
@@ -71,6 +71,13 @@ const OrganizerPanel = () => {
     const newAmount = parseInt(value) || 0;
     updateSettings({
       reBuyAmount: newAmount > 0 ? newAmount : 1,
+    });
+  };
+
+  const handleRentChange = (value: string) => {
+    const newAmount = parseInt(value) || 0;
+    updateSettings({
+      rent: newAmount >= 0 ? newAmount : 0,
     });
   };
 
@@ -242,6 +249,20 @@ const OrganizerPanel = () => {
                       min="1"
                       value={reBuyAmount}
                       onChange={(e) => handleReBuyAmountChange(e.target.value)}
+                      className="w-full"
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="rent">Rent</Label>
+                  <div className="flex gap-2 items-center">
+                    <Input
+                      id="rent"
+                      type="number"
+                      min="0"
+                      value={rent}
+                      onChange={(e) => handleRentChange(e.target.value)}
                       className="w-full"
                     />
                   </div>

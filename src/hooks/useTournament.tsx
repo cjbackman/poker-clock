@@ -33,6 +33,7 @@ export interface TournamentSettings {
   title: string;
   buyInAmount: number;
   reBuyAmount: number;
+  rent: number;
   blindStructure: BlindStructure;
   prizeDistribution: PrizeDistribution;
 }
@@ -87,6 +88,7 @@ const defaultSettings: TournamentSettings = {
   title: `♣♦ Juldagspokern ${new Date().getFullYear()} ♥♠`,
   buyInAmount: 400,
   reBuyAmount: 400,
+  rent: 1500,
   blindStructure: blindStructures.regular,
   prizeDistribution: {
     type: 'percentage',
@@ -190,9 +192,12 @@ export const TournamentProvider = ({ children }: { children: ReactNode }) => {
   }, [tournament]);
 
   // Calculate prize pool
-  const prizePool =
+  const prizePool = Math.max(
+    0,
     tournament.buyIns * tournament.settings.buyInAmount +
-    tournament.reBuys * tournament.settings.reBuyAmount;
+      tournament.reBuys * tournament.settings.reBuyAmount -
+      tournament.settings.rent,
+  );
 
   // Calculate prizes based on distribution type
   const calculatePrizes = useCallback(() => {

@@ -100,6 +100,9 @@ describe('useTournament', () => {
     it('calculates prizePool from buyIns and reBuys', () => {
       const { result } = renderHook(() => useTournament(), { wrapper });
 
+      // Zero out rent so we can test buy-in math in isolation
+      act(() => result.current.updateSettings({ rent: 0 }));
+
       // Start with 0 buyIns, 0 reBuys -> pool = 0
       expect(result.current.prizePool).toBe(0);
 
@@ -113,6 +116,9 @@ describe('useTournament', () => {
 
     it('calculates prizes in percentage mode', () => {
       const { result } = renderHook(() => useTournament(), { wrapper });
+
+      // Zero out rent so we can test prize math in isolation
+      act(() => result.current.updateSettings({ rent: 0 }));
 
       // Add some buy-ins to create a pool
       act(() => result.current.addBuyIn());
