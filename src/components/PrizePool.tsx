@@ -1,5 +1,6 @@
 import { useTournament } from '@/hooks/useTournament';
 import { Trophy } from 'lucide-react';
+import { STARTING_STACK_TOTAL } from '@/components/StartStack';
 
 const PrizePool = () => {
   const { tournament, prizePool, prizes } = useTournament();
@@ -18,7 +19,7 @@ const PrizePool = () => {
 
       {/* Total Prize Pool */}
       <div className="mb-5">
-        <div className="text-sm text-muted-foreground mb-1">Total</div>
+        <div className="text-sm text-muted-foreground mb-1">Total Amount</div>
         <div className="text-3xl md:text-4xl font-semibold">{formatAmount(prizePool)}</div>
       </div>
 
@@ -37,6 +38,14 @@ const PrizePool = () => {
         <div className="flex items-center justify-between">
           <div className="prize-badge prize-badge-3rd">3rd Place</div>
           <div className="text-xl font-medium">{formatAmount(prizes.third)}</div>
+        </div>
+      </div>
+
+      {/* Total Chips in Play */}
+      <div className="mt-5">
+        <div className="text-sm text-muted-foreground mb-1">Total Chips in Play</div>
+        <div className="text-3xl md:text-4xl font-semibold">
+          {((tournament.buyIns + tournament.reBuys) * STARTING_STACK_TOTAL).toLocaleString()}
         </div>
       </div>
     </div>

@@ -35,12 +35,12 @@ const chips = [
   { value: 500, count: 3, fill: '#16a34a' },
 ] as const;
 
-const total = chips.reduce((sum, c) => sum + c.value * c.count, 0);
+export const STARTING_STACK_TOTAL = chips.reduce((sum, c) => sum + c.value * c.count, 0);
 
 const StartStack = () => {
   return (
     <div className="glass p-6 rounded-2xl h-full flex flex-col">
-      <h2 className="text-lg font-semibold text-center mb-4">Start Stack</h2>
+      <h2 className="text-lg font-semibold text-center mb-4">Starting Stack</h2>
       <div className="space-y-2">
         {chips.map((chip) => (
           <div key={chip.value} className="flex items-center justify-between">
@@ -56,7 +56,7 @@ const StartStack = () => {
       </div>
       <div className="border-t border-white/10 mt-3 pt-3 flex items-center justify-between">
         <span className="font-semibold text-poker-gold">Total</span>
-        <span className="text-2xl font-semibold text-poker-gold">{total}</span>
+        <span className="text-2xl font-semibold text-poker-gold">{STARTING_STACK_TOTAL}</span>
       </div>
     </div>
   );
