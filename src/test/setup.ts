@@ -4,9 +4,11 @@ import { vi } from 'vitest';
 // Mock Web Audio API
 global.AudioContext = vi.fn().mockImplementation(() => ({
   state: 'running',
+  sampleRate: 44100,
   resume: vi.fn().mockResolvedValue(undefined),
   decodeAudioData: vi.fn().mockResolvedValue({ duration: 1 }),
   destination: {},
+  createBuffer: vi.fn().mockReturnValue({ duration: 0 }),
   createBufferSource: vi.fn().mockReturnValue({
     connect: vi.fn(),
     start: vi.fn(),

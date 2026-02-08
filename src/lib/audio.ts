@@ -28,29 +28,45 @@ const loadBuffer = async (path: string): Promise<AudioBuffer> => {
 /**
  * Call on first user gesture (e.g. Play button tap) to unlock audio
  * playback on mobile browsers and preload all sound buffers.
+ *
+ * Plays a silent buffer to fully unlock the iOS audio pipeline, then
+ * preloads all sounds so subsequent non-gesture playback works.
  */
-export const unlockAudio = () => {
+export const unlockAudio = async () => {
   const ctx = getAudioContext();
   if (ctx.state === 'suspended') {
-    ctx.resume();
+    await ctx.resume();
   }
+  // Play a tiny silent buffer to fully unlock audio on iOS Safari.
+  // Without this, the context may re-suspend before the first real sound.
+  const silentBuffer = ctx.createBuffer(1, 1, ctx.sampleRate);
+  const source = ctx.createBufferSource();
+  source.buffer = silentBuffer;
+  source.connect(ctx.destination);
+  source.start(0);
+
   // Preload all sounds so they play instantly when needed
   Object.values(SOUND_PATHS).forEach((path) => loadBuffer(path));
 };
 
 const playSound = (path: string) => {
   const ctx = getAudioContext();
+  const play = () => {
+    loadBuffer(path)
+      .then((buffer) => {
+        const source = ctx.createBufferSource();
+        source.buffer = buffer;
+        source.connect(ctx.destination);
+        source.start(0);
+      })
+      .catch(() => {});
+  };
+
   if (ctx.state === 'suspended') {
-    ctx.resume();
+    ctx.resume().then(play);
+  } else {
+    play();
   }
-  loadBuffer(path)
-    .then((buffer) => {
-      const source = ctx.createBufferSource();
-      source.buffer = buffer;
-      source.connect(ctx.destination);
-      source.start(0);
-    })
-    .catch(() => {});
 };
 
 export const playBlindCountdownSound = () => {

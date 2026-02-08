@@ -11,7 +11,7 @@ describe('audio', () => {
   let playBlindCountdownSound: () => void;
   let playBlindRaiseSound: () => void;
   let playTournamentStartSound: () => void;
-  let unlockAudio: () => void;
+  let unlockAudio: () => Promise<void>;
 
   beforeEach(async () => {
     vi.resetModules();
@@ -26,9 +26,11 @@ describe('audio', () => {
       'AudioContext',
       vi.fn().mockImplementation(() => ({
         state: 'running',
+        sampleRate: 44100,
         resume: resumeSpy,
         decodeAudioData: decodeAudioDataSpy,
         destination: mockDestination,
+        createBuffer: vi.fn().mockReturnValue({ duration: 0 }),
         createBufferSource: vi.fn().mockReturnValue({
           connect: connectSpy,
           start: startSpy,
@@ -85,9 +87,11 @@ describe('audio', () => {
       'AudioContext',
       vi.fn().mockImplementation(() => ({
         state: 'suspended',
+        sampleRate: 44100,
         resume: suspendedResume,
         decodeAudioData: decodeAudioDataSpy,
         destination: mockDestination,
+        createBuffer: vi.fn().mockReturnValue({ duration: 0 }),
         createBufferSource: vi.fn().mockReturnValue({
           connect: connectSpy,
           start: startSpy,
@@ -97,7 +101,7 @@ describe('audio', () => {
     );
 
     const audioModule = await import('./audio');
-    audioModule.unlockAudio();
+    await audioModule.unlockAudio();
     expect(suspendedResume).toHaveBeenCalled();
     // Should preload all 3 sounds
     await vi.waitFor(() => {
