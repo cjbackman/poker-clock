@@ -42,7 +42,10 @@ const PokerClock = () => {
 
           {/* Timer - Top Half */}
           <div className="mb-4 md:mb-8 h-[35vh] md:h-[45vh]">
-            <div className="glass rounded-3xl p-4 md:p-10 w-full h-full flex items-center justify-center shadow-lg">
+            <div
+              className="glass rounded-3xl p-4 md:p-10 w-full h-full flex items-center justify-center shadow-lg"
+              style={{ containerType: 'inline-size' }}
+            >
               <Timer />
             </div>
           </div>

@@ -56,34 +56,12 @@ const Timer = () => {
   const isNearEnd = shouldShowBlindChangeAlert(timer.timeRemaining);
 
   return (
-    <div className="flex items-center justify-between w-full h-full gap-4 md:gap-6">
-      {/* Left Column: Current Blinds */}
-      <div
-        className={`flex flex-col items-center justify-center flex-1 transition-all duration-300
-          ${isBlindChangeAlert ? 'animate-pulse-alert' : ''}`}
-      >
-        <div className="px-3 py-1 bg-secondary rounded-full text-xs md:text-sm font-medium mb-2">
-          Level {currentLevel.id}
-        </div>
-        <div className="text-xs uppercase tracking-wide text-muted-foreground mb-1">
-          Current Blinds
-        </div>
-        <div
-          className={`text-xl sm:text-2xl md:text-4xl font-semibold transition-colors duration-300
-            ${isBlindChangeAlert ? 'text-poker-red' : 'text-poker-gold'}`}
-        >
-          {currentLevel.smallBlind} / {currentLevel.bigBlind}
-        </div>
-        {currentLevel.ante > 0 && (
-          <div className="text-xs mt-1 text-muted-foreground">Ante: {currentLevel.ante}</div>
-        )}
-      </div>
-
-      {/* Center: Timer */}
-      <div className="flex flex-col items-center justify-center flex-shrink-0">
+    <div className="flex flex-col md:flex-row items-center justify-center md:justify-between w-full h-full gap-2 md:gap-6">
+      {/* Timer - first on mobile (flex-col), center on desktop (order-2) */}
+      <div className="flex flex-col items-center justify-center flex-shrink-0 md:order-2">
         <div
           role="timer"
-          className={`text-7xl sm:text-8xl md:text-[12rem] xl:text-[14rem] font-mono tracking-tight transition-all duration-300 ease-in-out
+          className={`text-[clamp(2.5rem,18cqi,14rem)] font-mono tracking-tight transition-all duration-300 ease-in-out
             ${animate ? 'scale-105 text-primary' : 'scale-100'}
             ${isNearEnd ? 'text-poker-red' : 'text-poker-gold'}`}
         >
@@ -96,8 +74,12 @@ const Timer = () => {
           </span>
         </div>
 
+        <div className="px-3 py-1 bg-secondary rounded-full text-xs md:text-sm font-medium mt-1 md:mt-2">
+          Level {currentLevel.id}
+        </div>
+
         {/* Timer Controls - Play/pause button only */}
-        <div className="flex gap-5 items-center mt-4 md:mt-10">
+        <div className="flex gap-5 items-center mt-1 md:mt-4">
           {timer.isRunning ? (
             <Button
               variant="outline"
@@ -122,23 +104,45 @@ const Timer = () => {
         </div>
       </div>
 
-      {/* Right Column: Next Level */}
-      <div className="flex flex-col items-center justify-center flex-1">
-        {nextLevel ? (
-          <>
-            <div className="text-xs uppercase tracking-wide text-muted-foreground mb-1">
-              Next Level
-            </div>
-            <div className="text-xl sm:text-2xl md:text-4xl font-medium">
-              {nextLevel.smallBlind} / {nextLevel.bigBlind}
-            </div>
-            {nextLevel.ante > 0 && (
-              <div className="text-xs mt-1 text-muted-foreground">Ante: {nextLevel.ante}</div>
-            )}
-          </>
-        ) : (
-          <div className="text-xs uppercase tracking-wide text-muted-foreground">Final Level</div>
-        )}
+      {/* Blinds - side-by-side row on mobile, split to left/right columns on desktop */}
+      <div className="flex items-start justify-between w-full md:contents">
+        {/* Current Blinds */}
+        <div
+          className={`flex flex-col items-center justify-center md:flex-1 md:order-1 transition-all duration-300
+            ${isBlindChangeAlert ? 'animate-pulse-alert' : ''}`}
+        >
+          <div className="text-xs uppercase tracking-wide text-muted-foreground mb-1">
+            Current Blinds
+          </div>
+          <div
+            className={`text-[clamp(1.1rem,4cqi,2.5rem)] font-semibold transition-colors duration-300
+              ${isBlindChangeAlert ? 'text-poker-red' : 'text-poker-gold'}`}
+          >
+            {currentLevel.smallBlind} / {currentLevel.bigBlind}
+          </div>
+          {currentLevel.ante > 0 && (
+            <div className="text-xs mt-1 text-muted-foreground">Ante: {currentLevel.ante}</div>
+          )}
+        </div>
+
+        {/* Next Level */}
+        <div className="flex flex-col items-center justify-center md:flex-1 md:order-3">
+          {nextLevel ? (
+            <>
+              <div className="text-xs uppercase tracking-wide text-muted-foreground mb-1">
+                Next Level
+              </div>
+              <div className="text-[clamp(1.1rem,4cqi,2.5rem)] font-medium">
+                {nextLevel.smallBlind} / {nextLevel.bigBlind}
+              </div>
+              {nextLevel.ante > 0 && (
+                <div className="text-xs mt-1 text-muted-foreground">Ante: {nextLevel.ante}</div>
+              )}
+            </>
+          ) : (
+            <div className="text-xs uppercase tracking-wide text-muted-foreground">Final Level</div>
+          )}
+        </div>
       </div>
     </div>
   );
