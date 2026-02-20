@@ -83,13 +83,12 @@ Poker Clock is a **poker tournament timer and management application**. It provi
 src/
 ├── components/          # React components
 │   ├── ui/              # shadcn/ui primitives (do not edit without reason)
-│   ├── Timer.tsx         # Main timer display and controls
-│   ├── BlindDisplay.tsx  # Current/next blind level display
-│   ├── BuyInsPanel.tsx   # Buy-in and rebuy tracking
+│   ├── Timer.tsx         # Main timer display, blind levels, and controls
+│   ├── EntriesPanel.tsx  # Buy-in and rebuy tracking
 │   ├── PrizePool.tsx     # Prize distribution display
+│   ├── StartStack.tsx    # Starting chip stack breakdown
 │   ├── OrganizerPanel.tsx# Settings panel (blind structure, prizes, reset)
-│   ├── TournamentTitle.tsx
-│   └── Layout.tsx
+│   └── TournamentTitle.tsx
 ├── hooks/
 │   ├── useTournament.tsx # Tournament state context and provider (central state)
 │   ├── useTimer.tsx      # Timer logic (start/pause/reset/tick)
@@ -98,16 +97,16 @@ src/
 │   └── use-mobile.tsx
 ├── lib/
 │   ├── blindStructures.ts # BlindLevel/BlindStructure types + predefined structures
-│   ├── audio.ts           # Sound playback functions
+│   ├── chips.ts           # Chip denominations and starting stack calculation
+│   ├── audio.ts           # Sound playback functions (Web Audio API)
 │   ├── timerUtils.ts      # Timer helper functions
 │   ├── storage.ts         # localStorage read/write/clear
 │   └── utils.ts           # Tailwind cn() utility
 ├── pages/
-│   ├── Index.tsx          # Main page composing all panels
-│   └── NotFound.tsx
+│   └── Index.tsx          # Main page composing all panels
 ├── test/
 │   └── setup.ts           # Vitest global setup (mocks for Audio, ResizeObserver, matchMedia)
-├── App.tsx                # Root component with routing + providers
+├── App.tsx                # Root component with providers
 └── main.tsx               # Entry point
 ```
 
@@ -372,7 +371,7 @@ Heuristics:
 - **Timer auto-start after level advance** uses `setTimeout(0)` to avoid stale closure in `advanceToNextLevel` (`useTournament.tsx:329`). Do not refactor this to a synchronous call without verifying timer behavior.
 - **Audio paths assume base path `/sounds/`** - in production the base path is `/poker-clock/`. Audio files are in `public/sounds/`. If audio breaks, check Vite base path config.
 - **TypeScript is not strict** (`strictNullChecks: false`). Many values can be `null`/`undefined` without compiler warnings. Be defensive when accessing optional data.
-- **`@typescript-eslint/no-unused-vars` is disabled** in ESLint config. Dead code won't trigger lint errors - clean up manually.
+- **`@typescript-eslint/no-unused-vars` is set to `warn`** in ESLint config. Unused variables trigger warnings (prefix with `_` to suppress).
 - **No CI pipeline exists.** Tests and lint must be run locally. Do not assume a safety net.
 
 ## Institutional memory (compounding section)
@@ -404,6 +403,10 @@ Lesson: When onboarding to a generated codebase, audit the config before assumin
 Root cause: `BuyInsPanel` used `while (buyIns > 0) removeBuyIn()` where `buyIns` was a stale closure value. `removeBuyIn()` enqueues async state updates that never change the closed-over variable, so the loop spins forever.
 Fix: Added atomic `resetCounts()` action to `TournamentProvider` that sets both counts to 0 in a single `setTournament` call. Replaced the while-loop in `BuyInsPanel` with a call to `resetCounts()`.
 Lesson: Never loop over React state in a synchronous handler. State updates are batched and asynchronous — the loop variable never changes. Always use a single atomic state update for "reset to X" operations.
+
+### 2026-02-20 - Codebase hygiene cleanup
+Findings: (1) `@tanstack/react-query` was imported and wrapped in a provider but never used — removed dependency and provider. (2) 12 `console.log` debug statements in `useTimer.tsx` and `useTournament.tsx` shipped to production — removed. (3) `Timer.tsx` had unused `animate`/`blindAnimate` state variables (setters never called, values never read) — removed dead code. (4) ESLint `no-unused-vars` was disabled — enabled with `warn` severity. (5) Directory structure in AGENTS.md was stale (referenced deleted files `BlindDisplay.tsx`, `BuyInsPanel.tsx`, `Layout.tsx`, `NotFound.tsx`; missing `EntriesPanel.tsx`, `StartStack.tsx`, `chips.ts`).
+Lesson: Periodically audit for dead code, especially after renames. Scaffolded codebases often ship with unused dependencies and debug logging. Enabling lint rules early catches drift.
 
 ## How to interact with humans
 

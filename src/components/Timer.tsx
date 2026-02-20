@@ -1,4 +1,3 @@
-import { useState, useEffect } from 'react';
 import { useTournament } from '@/hooks/useTournament';
 import { Play, Pause } from 'lucide-react';
 import { playTournamentStartSound, unlockAudio } from '@/lib/audio';
@@ -9,8 +8,6 @@ import { shouldShowBlindChangeAlert } from '@/lib/timerUtils';
 const Timer = () => {
   const { timer, tournament, currentLevel, nextLevel } = useTournament();
   const { isBlindChangeAlert } = tournament;
-  const [animate, setAnimate] = useState(false);
-  const [blindAnimate, setBlindAnimate] = useState(false);
 
   const handlePlayPause = () => {
     unlockAudio();
@@ -33,18 +30,6 @@ const Timer = () => {
     onSpacePress: handlePlayPause,
   });
 
-  // Blind change alert animation
-  useEffect(() => {
-    if (isBlindChangeAlert) {
-      const interval = setInterval(() => {
-        setBlindAnimate((prev) => !prev);
-      }, 500);
-      return () => clearInterval(interval);
-    } else {
-      setBlindAnimate(false);
-    }
-  }, [isBlindChangeAlert]);
-
   // Create a visual timer display
   const minutes = Math.floor(timer.timeRemaining / 60);
   const seconds = timer.timeRemaining % 60;
@@ -61,17 +46,12 @@ const Timer = () => {
       <div className="flex flex-col items-center justify-center flex-shrink-0 md:order-2">
         <div
           role="timer"
-          className={`text-[clamp(2.5rem,18cqi,14rem)] font-mono tracking-tight transition-all duration-300 ease-in-out
-            ${animate ? 'scale-105 text-primary' : 'scale-100'}
+          className={`text-[clamp(2.5rem,18cqi,14rem)] font-mono tracking-tight transition-all duration-300 ease-in-out scale-100
             ${isNearEnd ? 'text-poker-red' : 'text-poker-gold'}`}
         >
-          <span className={`inline-block ${animate ? 'digit-change' : ''}`}>
-            {formattedMinutes}
-          </span>
+          <span className="inline-block">{formattedMinutes}</span>
           <span className="mx-1">:</span>
-          <span className={`inline-block ${animate ? 'digit-change' : ''}`}>
-            {formattedSeconds}
-          </span>
+          <span className="inline-block">{formattedSeconds}</span>
         </div>
 
         <div className="px-3 py-1 bg-secondary rounded-full text-xs md:text-sm font-medium mt-1 md:mt-2">

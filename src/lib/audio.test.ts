@@ -11,7 +11,6 @@ describe('audio', () => {
   let playBlindCountdownSound: () => void;
   let playBlindRaiseSound: () => void;
   let playTournamentStartSound: () => void;
-  let unlockAudio: () => Promise<void>;
 
   beforeEach(async () => {
     vi.resetModules();
@@ -50,7 +49,6 @@ describe('audio', () => {
     playBlindCountdownSound = audioModule.playBlindCountdownSound;
     playBlindRaiseSound = audioModule.playBlindRaiseSound;
     playTournamentStartSound = audioModule.playTournamentStartSound;
-    unlockAudio = audioModule.unlockAudio;
   });
 
   it('playBlindCountdownSound fetches correct path and plays via Web Audio API', async () => {
