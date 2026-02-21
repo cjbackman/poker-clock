@@ -1,6 +1,7 @@
 import {
   useState,
   useCallback,
+  useMemo,
   createContext,
   useContext,
   ReactNode,
@@ -200,7 +201,7 @@ export const TournamentProvider = ({ children }: { children: ReactNode }) => {
   );
 
   // Calculate prizes based on distribution type
-  const calculatePrizes = useCallback(() => {
+  const prizes = useMemo(() => {
     const { type, first, second, third } = tournament.settings.prizeDistribution;
 
     if (type === 'percentage') {
@@ -213,8 +214,6 @@ export const TournamentProvider = ({ children }: { children: ReactNode }) => {
       return { first, second, third };
     }
   }, [prizePool, tournament.settings.prizeDistribution]);
-
-  const prizes = calculatePrizes();
 
   // Update tournament settings
   const updateSettings = useCallback((settings: Partial<TournamentSettings>) => {

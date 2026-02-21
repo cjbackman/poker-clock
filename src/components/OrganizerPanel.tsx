@@ -108,11 +108,7 @@ const OrganizerPanel = () => {
     field: 'smallBlind' | 'bigBlind' | 'ante' | 'duration',
     value: number,
   ) => {
-    if (field === 'duration') {
-      updateBlindLevel(levelId, field, value);
-    } else {
-      updateBlindLevel(levelId, field, value);
-    }
+    updateBlindLevel(levelId, field, value);
   };
 
   const parseDuration = (value: string): number | null => {
@@ -655,7 +651,7 @@ const OrganizerPanel = () => {
                   onClick={handleResetCounts}
                 >
                   <RefreshCcw className="h-4 w-4" />
-                  Reset Buy-ins & Rebuys
+                  Reset Entries
                 </Button>
 
                 <Separator />

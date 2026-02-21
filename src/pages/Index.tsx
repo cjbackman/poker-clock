@@ -62,7 +62,7 @@ const PokerClock = () => {
               <StartStack />
             </div>
 
-            {/* Buy-ins and Rebuys - Right */}
+            {/* Entries - Right */}
             <div className="h-full">
               <EntriesPanel />
             </div>
