@@ -266,19 +266,6 @@ describe('useTournament', () => {
       expect(result.current.tournament.currentLevelId).toBe(1);
     });
 
-    it('updateCustomBlindStructure replaces levels on the current structure', () => {
-      const { result } = renderHook(() => useTournament(), { wrapper });
-
-      const customLevels = [
-        { id: 1, smallBlind: 100, bigBlind: 200, ante: 25, duration: 900 },
-        { id: 2, smallBlind: 200, bigBlind: 400, ante: 50, duration: 900 },
-      ];
-
-      act(() => result.current.updateCustomBlindStructure(customLevels));
-
-      expect(result.current.tournament.settings.blindStructure.levels).toEqual(customLevels);
-    });
-
     it('updateBlindStructure does nothing for unknown key', () => {
       const { result } = renderHook(() => useTournament(), { wrapper });
 

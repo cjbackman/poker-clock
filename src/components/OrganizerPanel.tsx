@@ -99,10 +99,6 @@ const OrganizerPanel = () => {
     addBlindLevel(newLevel);
   };
 
-  const handleRemoveBlindLevel = (levelId: number) => {
-    removeBlindLevel(levelId);
-  };
-
   const handleUpdateBlindLevel = (
     levelId: number,
     field: 'smallBlind' | 'bigBlind' | 'ante' | 'duration',
@@ -153,22 +149,6 @@ const OrganizerPanel = () => {
   const handleClosePanel = () => {
     if (hasInvalidDurations) return;
     toggleSettingsPanel();
-  };
-
-  const handleResetTimer = () => {
-    resetTimer();
-  };
-
-  const handleResetLevels = () => {
-    resetLevels();
-  };
-
-  const handleResetCounts = () => {
-    resetCounts();
-  };
-
-  const handleResetTournament = () => {
-    resetTournament();
   };
 
   if (!isPanelOpen) {
@@ -417,7 +397,7 @@ const OrganizerPanel = () => {
                             variant="ghost"
                             size="icon"
                             className="w-6 h-6 absolute -top-2 -right-2 rounded-full bg-destructive text-destructive-foreground"
-                            onClick={() => handleRemoveBlindLevel(level.id)}
+                            onClick={() => removeBlindLevel(level.id)}
                           >
                             <Trash className="h-3.5 w-3.5" />
                             <span className="sr-only">Remove Level</span>
@@ -630,7 +610,7 @@ const OrganizerPanel = () => {
                 <Button
                   variant="outline"
                   className="w-full flex items-center justify-center gap-2"
-                  onClick={handleResetTimer}
+                  onClick={resetTimer}
                 >
                   <TimerIcon className="h-4 w-4" />
                   Reset Timer
@@ -639,7 +619,7 @@ const OrganizerPanel = () => {
                 <Button
                   variant="outline"
                   className="w-full flex items-center justify-center gap-2"
-                  onClick={handleResetLevels}
+                  onClick={resetLevels}
                 >
                   <Layers className="h-4 w-4" />
                   Reset Levels
@@ -648,7 +628,7 @@ const OrganizerPanel = () => {
                 <Button
                   variant="outline"
                   className="w-full flex items-center justify-center gap-2"
-                  onClick={handleResetCounts}
+                  onClick={resetCounts}
                 >
                   <RefreshCcw className="h-4 w-4" />
                   Reset Entries
@@ -660,7 +640,7 @@ const OrganizerPanel = () => {
                   variant="reset"
                   size="lg"
                   className="w-full flex items-center justify-center gap-2"
-                  onClick={handleResetTournament}
+                  onClick={resetTournament}
                 >
                   <RotateCcw className="h-5 w-5" />
                   Reset Everything

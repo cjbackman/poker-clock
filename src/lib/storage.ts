@@ -2,7 +2,7 @@
  * Utility functions for handling local storage
  */
 
-import { TournamentState } from '@/hooks/useTournament';
+import { TournamentState } from '@/lib/types';
 
 const STORAGE_KEY = 'poker-tournament-settings';
 const TIMER_REMAINING_KEY = 'poker-timer-remaining';

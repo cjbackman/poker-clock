@@ -1,3 +1,4 @@
+import { useCallback } from 'react';
 import { useTournament } from '@/hooks/useTournament';
 import { Play, Pause } from 'lucide-react';
 import { playTournamentStartSound, unlockAudio } from '@/lib/audio';
@@ -9,7 +10,7 @@ const Timer = () => {
   const { timer, tournament, currentLevel, nextLevel } = useTournament();
   const { isBlindChangeAlert } = tournament;
 
-  const handlePlayPause = () => {
+  const handlePlayPause = useCallback(() => {
     unlockAudio();
     if (timer.isRunning) {
       timer.pause();
@@ -23,7 +24,7 @@ const Timer = () => {
         timer.start();
       }
     }
-  };
+  }, [timer, currentLevel]);
 
   // Set up keyboard controls for play/pause with spacebar
   useKeyboardControls({

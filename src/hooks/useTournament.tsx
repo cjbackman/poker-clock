@@ -8,7 +8,8 @@ import {
   useEffect,
   useRef,
 } from 'react';
-import { BlindLevel, BlindStructure, blindStructures, getNextLevel } from '@/lib/blindStructures';
+import { BlindLevel, blindStructures, getNextLevel } from '@/lib/blindStructures';
+import { PrizeDistribution, TournamentSettings, TournamentState } from '@/lib/types';
 import { useTimer } from './useTimer';
 import { playBlindCountdownSound, playBlindRaiseSound } from '@/lib/audio';
 import { useToast } from '@/components/ui/use-toast';
@@ -20,33 +21,13 @@ import {
   loadTimerRemaining,
 } from '@/lib/storage';
 
-// Define types
-export type PrizeDistributionType = 'percentage' | 'fixed';
-
-export interface PrizeDistribution {
-  type: PrizeDistributionType;
-  first: number;
-  second: number;
-  third: number;
-}
-
-export interface TournamentSettings {
-  title: string;
-  buyInAmount: number;
-  reBuyAmount: number;
-  rent: number;
-  blindStructure: BlindStructure;
-  prizeDistribution: PrizeDistribution;
-}
-
-export interface TournamentState {
-  settings: TournamentSettings;
-  buyIns: number;
-  reBuys: number;
-  currentLevelId: number;
-  isBlindChangeAlert: boolean;
-  isPanelOpen: boolean;
-}
+// Re-export types from lib/types for consumers that import from this hook
+export type {
+  PrizeDistributionType,
+  PrizeDistribution,
+  TournamentSettings,
+  TournamentState,
+} from '@/lib/types';
 
 export interface TournamentContextValue {
   // State
@@ -78,7 +59,6 @@ export interface TournamentContextValue {
   updatePrizeDistribution: (distribution: Partial<PrizeDistribution>) => void;
 
   // Custom blind structure management
-  updateCustomBlindStructure: (levels: BlindLevel[]) => void;
   addBlindLevel: (level: BlindLevel) => void;
   removeBlindLevel: (levelId: number) => void;
   updateBlindLevel: (levelId: number, field: keyof BlindLevel, value: number) => void;
@@ -242,20 +222,6 @@ export const TournamentProvider = ({ children }: { children: ReactNode }) => {
     },
     [timer],
   );
-
-  // Custom blind structure management
-  const updateCustomBlindStructure = useCallback((levels: BlindLevel[]) => {
-    setTournament((prev) => ({
-      ...prev,
-      settings: {
-        ...prev.settings,
-        blindStructure: {
-          ...prev.settings.blindStructure,
-          levels,
-        },
-      },
-    }));
-  }, []);
 
   // Add a new blind level
   const addBlindLevel = useCallback((level: BlindLevel) => {
@@ -489,7 +455,6 @@ export const TournamentProvider = ({ children }: { children: ReactNode }) => {
     toggleSettingsPanel,
     dismissAlert,
     updatePrizeDistribution,
-    updateCustomBlindStructure,
     addBlindLevel,
     removeBlindLevel,
     updateBlindLevel,

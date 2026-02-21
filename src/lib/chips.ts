@@ -1,3 +1,7 @@
+// Fixed chip configuration for this tournament.
+// STARTING_STACK_TOTAL is used in PrizePool to display "Total Chips in Play".
+// If chip denominations or counts change, update this file — the prize pool
+// display will silently show wrong numbers otherwise.
 export const chips = [
   { value: 25, count: 8, fill: '#dc2626' },
   { value: 50, count: 8, fill: '#2563eb' },
