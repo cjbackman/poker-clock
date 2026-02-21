@@ -131,11 +131,34 @@ export const TournamentProvider = ({ children }: { children: ReactNode }) => {
   // Track whether the countdown sound has been played for the current level
   const countdownPlayed = useRef(false);
 
+  // Throttle localStorage timer writes: track the last saved value and the
+  // latest pending value so we can flush on page unload.
+  const lastSavedRemaining = useRef<number>(0);
+  const pendingTimerRemaining = useRef<number | null>(null);
+
+  // Flush latest pending value on page unload so recovery is accurate.
+  useEffect(() => {
+    const flush = () => {
+      if (pendingTimerRemaining.current !== null) {
+        saveTimerRemaining(pendingTimerRemaining.current);
+      }
+    };
+    window.addEventListener('beforeunload', flush);
+    return () => window.removeEventListener('beforeunload', flush);
+  }, []);
+
   // Timer setup with callbacks
   const timer = useTimer({
     initialTime: initialTimeRemaining,
     onTick: (remaining) => {
-      saveTimerRemaining(remaining);
+      // Write to localStorage at most every 5 seconds to reduce sync I/O.
+      // Track by timer-seconds elapsed (1 tick = 1 second in production).
+      pendingTimerRemaining.current = remaining;
+      if (lastSavedRemaining.current === 0 || lastSavedRemaining.current - remaining >= 5) {
+        saveTimerRemaining(remaining);
+        lastSavedRemaining.current = remaining;
+        pendingTimerRemaining.current = null;
+      }
 
       // Play countdown sound 4 seconds before blind change
       if (remaining <= 4 && remaining > 0 && !countdownPlayed.current) {
@@ -144,7 +167,10 @@ export const TournamentProvider = ({ children }: { children: ReactNode }) => {
       }
     },
     onTimeChange: (newTime) => {
+      // Level changes are infrequent — write immediately for accurate recovery
       saveTimerRemaining(newTime);
+      lastSavedRemaining.current = 0;
+      pendingTimerRemaining.current = null;
     },
     onComplete: () => {
       // When the timer completes, show the blind change alert and play a sound
