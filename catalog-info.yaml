@@ -1,0 +1,11 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: poker-clock
+  description: A poker clock.
+  labels:
+    tier: '2'
+spec:
+  type: service
+  lifecycle: production
+  owner: '@cjbackman'
